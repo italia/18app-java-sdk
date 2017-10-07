@@ -1,14 +1,16 @@
 
 package it.mibact.bonus.verificavoucher;
 
+import com.sun.xml.internal.ws.developer.JAXWSProperties;
+
+import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyStore;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
 import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import javax.xml.ws.WebEndpoint;
-import javax.xml.ws.WebServiceClient;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.WebServiceFeature;
+import javax.xml.ws.*;
 
 
 /**
@@ -70,7 +72,26 @@ public class VerificaVoucher_Service
      */
     @WebEndpoint(name = "VerificaVoucherSOAP")
     public VerificaVoucher getVerificaVoucherSOAP() {
-        return super.getPort(new QName("http://bonus.mibact.it/VerificaVoucher/", "VerificaVoucherSOAP"), VerificaVoucher.class);
+
+        try {
+            SSLContext sc = SSLContext.getInstance("SSLv3");
+            KeyManagerFactory factory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keyStore.load(new FileInputStream("mycertpath"), "password".toCharArray());
+            factory.init(keyStore, "password".toCharArray());
+            sc.init(factory.getKeyManagers(), null, null);
+
+            VerificaVoucher service = super.getPort(new QName("http://bonus.mibact.it/VerificaVoucher/", "VerificaVoucherSOAP"), VerificaVoucher.class);
+            ((BindingProvider) service).getRequestContext()
+                    .put(JAXWSProperties.SSL_SOCKET_FACTORY, sc.getSocketFactory());
+
+            return service;
+
+        } catch(Exception e){
+            System.out.println("oh");
+        }
+
+        return null;
     }
 
     /**
