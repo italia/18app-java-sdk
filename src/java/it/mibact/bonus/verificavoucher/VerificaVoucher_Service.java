@@ -74,11 +74,12 @@ public class VerificaVoucher_Service
     public VerificaVoucher getVerificaVoucherSOAP() {
 
         try {
+
             SSLContext sc = SSLContext.getInstance("SSLv3");
             KeyManagerFactory factory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keyStore.load(new FileInputStream("mycertpath"), "password".toCharArray());
-            factory.init(keyStore, "password".toCharArray());
+            KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            keyStore.load(new FileInputStream((System.getProperty("user.dir")) + "/resource/AAAAAA00H01H501P.p12"), "m3D0T4aM".toCharArray());
+            factory.init(keyStore, "m3D0T4aM".toCharArray());
             sc.init(factory.getKeyManagers(), null, null);
 
             VerificaVoucher service = super.getPort(new QName("http://bonus.mibact.it/VerificaVoucher/", "VerificaVoucherSOAP"), VerificaVoucher.class);
@@ -88,7 +89,7 @@ public class VerificaVoucher_Service
             return service;
 
         } catch(Exception e){
-            System.out.println("oh");
+            e.printStackTrace();
         }
 
         return null;
