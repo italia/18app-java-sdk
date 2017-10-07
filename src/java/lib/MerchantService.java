@@ -222,7 +222,7 @@ public class MerchantService {
         MerchantService merchantService = new MerchantService("AAAAAA00H01H501P.p12", "m3D0T4aM");
 
         try {
-            merchantService.confirmOperation(ConfirmOperation.CONFIRM, "tEWY2vxG", 600000);
+            merchantService.confirmOperation(ConfirmOperation.CONFIRM, "ORTEV4F0", 600000);
 
         } catch (VoucherVerificationException e) {
             e.printStackTrace();
