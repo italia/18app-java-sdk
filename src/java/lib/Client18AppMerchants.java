@@ -1,13 +1,6 @@
 package lib;
 
-import com.sun.xml.internal.ws.developer.JAXWSProperties;
 import it.mibact.bonus.verificavoucher.*;
-
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.xml.ws.BindingProvider;
-import java.io.FileInputStream;
-import java.security.KeyStore;
 
 /**
  * Library Interface
