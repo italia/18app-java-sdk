@@ -1,10 +1,15 @@
 package test;
 
+import com.sun.org.apache.xerces.internal.dom.ElementImpl;
+import com.sun.org.apache.xerces.internal.dom.TextImpl;
+import com.sun.xml.internal.messaging.saaj.soap.ver1_1.Detail1_1Impl;
+import com.sun.xml.internal.messaging.saaj.soap.ver1_1.Fault1_1Impl;
 import it.mibact.bonus.verificavoucher.Check;
 import it.mibact.bonus.verificavoucher.CheckRequestObj;
 import it.mibact.bonus.verificavoucher.CheckResponse;
 import it.mibact.bonus.verificavoucher.VerificaVoucher_Service;
 
+import javax.xml.ws.soap.SOAPFaultException;
 import java.security.NoSuchAlgorithmException;
 
 public class TestCheck {
@@ -24,13 +29,20 @@ public class TestCheck {
         CheckResponse checkResp = null;
         try {
             checkResp = verificaVoucher_service.getVerificaVoucherSOAP().check(checkRequestObj).getCheckResp();
-        } catch (Exception e) {
+        } catch (SOAPFaultException failure) {
             // TODO: 07/10/17 Navigare il DOM alla ricerca del codice di errore.
-            e.printStackTrace();
+            System.out.println("Naviga dom");
+
+            String code = failure.getFault().getDetail().getFirstChild().getFirstChild().getFirstChild().getTextContent();
+            System.out.println("failure code() = " + code);
+
+            String data =
+                    failure.getFault().getDetail().getFirstChild().getFirstChild().getNextSibling().getFirstChild().getTextContent();
+            System.out.println("failure data = " + data);
+
+
         }
 
-
-        System.out.println(checkResp);
 
     }
 

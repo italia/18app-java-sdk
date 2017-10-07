@@ -71,6 +71,7 @@ public class VerificaVoucher_Service
             ((BindingProvider) service).getRequestContext()
                     .put(JAXWSProperties.SSL_SOCKET_FACTORY, sc.getSocketFactory());
 
+
             return service;
 
         } catch(Exception e){
