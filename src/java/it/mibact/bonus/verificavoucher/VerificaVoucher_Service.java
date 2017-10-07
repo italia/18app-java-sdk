@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "VerificaVoucher", targetNamespace = "http://bonus.mibact.it/VerificaVoucher/", wsdlLocation = "file:/home/daniele/Scrivania/VerificaVoucher.wsdl")
+@WebServiceClient(name = "VerificaVoucher", targetNamespace = "http://bonus.mibact.it/VerificaVoucher/", wsdlLocation = "https://s3.eu-central-1.amazonaws.com/sklivvz-misc/VerificaVoucher.wsdl")
 public class VerificaVoucher_Service
     extends Service
 {
@@ -31,7 +31,7 @@ public class VerificaVoucher_Service
         WebServiceException e = null;
         try {
            //url = new URL("file:C:\\Users\\Franc\\Desktop\\18app\\VerificaVoucher.wsdl");
-           url = new URL("file:s3.eu-central-1.amazonaws.com/sklivvz-misc/VerificaVoucher.wsdl");
+           url = new URL("https://s3.eu-central-1.amazonaws.com/sklivvz-misc/VerificaVoucher.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
