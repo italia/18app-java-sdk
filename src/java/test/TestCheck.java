@@ -7,7 +7,7 @@ import it.mibact.bonus.verificavoucher.VerificaVoucher_Service;
 
 import java.security.NoSuchAlgorithmException;
 
-public class TestHub {
+public class TestCheck {
 
 
     public static void main(String[] args) throws NoSuchAlgorithmException {

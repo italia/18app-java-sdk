@@ -2,6 +2,7 @@ package lib;
 
 import it.mibact.bonus.verificavoucher.*;
 import lib.model.CheckOperation;
+import lib.model.ConfirmOperation;
 
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -57,6 +58,25 @@ public class MerchantService {
         return checkOperation(op, codVoucher, null);
     }
 
+    /**
+     * Method which issues a Check operation.
+     * @param op type of operation requested.
+     * @param codVoucher voucher code of the coupon.
+     * @param importo amount confirmed by the operator.
+     * @return
+     */
+    private ConfirmResponse confirmOperation(ConfirmOperation op, String codVoucher, double importo) throws SOAPFaultException {
+
+        Confirm confirm = new Confirm();
+        confirm.setTipoOperazione(op.getType());
+        confirm.setCodiceVoucher(codVoucher);
+        confirm.setImporto(importo);
+
+        ConfirmRequestObj confirmRequestObj = new ConfirmRequestObj();
+        confirmRequestObj.setCheckReq(confirm);
+        return service.getVerificaVoucherSOAP().confirm(confirmRequestObj).getCheckResp();
+    }
+
     public CheckResponse checkOnlyOperation(String codVoucher, String partitaIva) throws SOAPFaultException {
         return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher, partitaIva);
     }
@@ -81,8 +101,8 @@ public class MerchantService {
         return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher);
     }
 
-
-
-
+    public ConfirmResponse confirm(String codVoucher, double importo) throws SOAPFaultException {
+        return confirmOperation(ConfirmOperation.CONFIRM, codVoucher, importo);
+    }
 
 }
