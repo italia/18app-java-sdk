@@ -30,7 +30,8 @@ public class VerificaVoucher_Service
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/home/daniele/Scrivania/VerificaVoucher.wsdl");
+           //url = new URL("file:C:\\Users\\Franc\\Desktop\\18app\\VerificaVoucher.wsdl");
+           url = new URL("file:s3.eu-central-1.amazonaws.com/sklivvz-misc/VerificaVoucher.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
