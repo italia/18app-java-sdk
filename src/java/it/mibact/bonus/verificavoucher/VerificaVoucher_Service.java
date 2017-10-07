@@ -3,14 +3,14 @@ package it.mibact.bonus.verificavoucher;
 
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
 
-import java.io.FileInputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.KeyStore;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.xml.namespace.QName;
 import javax.xml.ws.*;
+import java.io.FileInputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.KeyStore;
 
 
 /**
@@ -32,7 +32,6 @@ public class VerificaVoucher_Service
         URL url = null;
         WebServiceException e = null;
         try {
-           //url = new URL("file:C:\\Users\\Franc\\Desktop\\18app\\VerificaVoucher.wsdl");
            url = new URL("https://s3.eu-central-1.amazonaws.com/sklivvz-misc/VerificaVoucher.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
@@ -74,11 +73,11 @@ public class VerificaVoucher_Service
     public VerificaVoucher getVerificaVoucherSOAP() {
 
         try {
-            SSLContext sc = SSLContext.getInstance("SSLv3");
+           SSLContext sc = SSLContext.getInstance("SSLv3");
             KeyManagerFactory factory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keyStore.load(new FileInputStream("mycertpath"), "password".toCharArray());
-            factory.init(keyStore, "password".toCharArray());
+            KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            keyStore.load(new FileInputStream("AAAAAA00H01H501P.p12"), "m3D0T4aM".toCharArray());
+            factory.init(keyStore, "m3D0T4aM".toCharArray());
             sc.init(factory.getKeyManagers(), null, null);
 
             VerificaVoucher service = super.getPort(new QName("http://bonus.mibact.it/VerificaVoucher/", "VerificaVoucherSOAP"), VerificaVoucher.class);
@@ -88,7 +87,7 @@ public class VerificaVoucher_Service
             return service;
 
         } catch(Exception e){
-            System.out.println("oh");
+            e.printStackTrace();
         }
 
         return null;
