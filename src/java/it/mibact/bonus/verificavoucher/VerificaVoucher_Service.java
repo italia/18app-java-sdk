@@ -28,6 +28,10 @@ public class VerificaVoucher_Service
     private final static WebServiceException VERIFICAVOUCHER_EXCEPTION;
     private final static QName VERIFICAVOUCHER_QNAME = new QName("http://bonus.mibact.it/VerificaVoucher/", "VerificaVoucher");
 
+    // Path to keystore and password for client side authentication using a certificate.
+    private String keystorePath;
+    private String password;
+
     static {
         URL url = null;
         WebServiceException e = null;
@@ -40,30 +44,11 @@ public class VerificaVoucher_Service
         VERIFICAVOUCHER_EXCEPTION = e;
     }
 
-    public VerificaVoucher_Service() {
+    public VerificaVoucher_Service(String keystorePath, String password) {
         super(__getWsdlLocation(), VERIFICAVOUCHER_QNAME);
+        this.keystorePath = keystorePath;
+        this.password = password;
     }
-
-    public VerificaVoucher_Service(WebServiceFeature... features) {
-        super(__getWsdlLocation(), VERIFICAVOUCHER_QNAME, features);
-    }
-
-    public VerificaVoucher_Service(URL wsdlLocation) {
-        super(wsdlLocation, VERIFICAVOUCHER_QNAME);
-    }
-
-    public VerificaVoucher_Service(URL wsdlLocation, WebServiceFeature... features) {
-        super(wsdlLocation, VERIFICAVOUCHER_QNAME, features);
-    }
-
-    public VerificaVoucher_Service(URL wsdlLocation, QName serviceName) {
-        super(wsdlLocation, serviceName);
-    }
-
-    public VerificaVoucher_Service(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
-        super(wsdlLocation, serviceName, features);
-    }
-
     /**
      * 
      * @return
@@ -76,8 +61,8 @@ public class VerificaVoucher_Service
            SSLContext sc = SSLContext.getInstance("SSLv3");
             KeyManagerFactory factory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             KeyStore keyStore = KeyStore.getInstance("PKCS12");
-            keyStore.load(new FileInputStream("AAAAAA00H01H501P.p12"), "m3D0T4aM".toCharArray());
-            factory.init(keyStore, "m3D0T4aM".toCharArray());
+            keyStore.load(new FileInputStream(keystorePath), password.toCharArray());
+            factory.init(keyStore, password.toCharArray());
             sc.init(factory.getKeyManagers(), null, null);
 
             VerificaVoucher service = super.getPort(new QName("http://bonus.mibact.it/VerificaVoucher/", "VerificaVoucherSOAP"), VerificaVoucher.class);

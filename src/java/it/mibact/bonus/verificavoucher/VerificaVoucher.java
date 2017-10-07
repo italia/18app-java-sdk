@@ -7,6 +7,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.ws.soap.SOAPFaultException;
 
 
 /**
@@ -33,7 +34,7 @@ public interface VerificaVoucher {
     @WebResult(name = "CheckResponseObj", targetNamespace = "http://bonus.mibact.it/VerificaVoucher/", partName = "parameters")
     public CheckResponseObj check(
             @WebParam(name = "CheckRequestObj", targetNamespace = "http://bonus.mibact.it/VerificaVoucher/", partName = "parameters")
-                    CheckRequestObj parameters);
+                    CheckRequestObj parameters) throws SOAPFaultException;
 
     /**
      * 
@@ -45,6 +46,6 @@ public interface VerificaVoucher {
     @WebResult(name = "ConfirmResponseObj", targetNamespace = "http://bonus.mibact.it/VerificaVoucher/", partName = "parameters")
     public ConfirmResponseObj confirm(
             @WebParam(name = "ConfirmRequestObj", targetNamespace = "http://bonus.mibact.it/VerificaVoucher/", partName = "parameters")
-                    ConfirmRequestObj parameters);
+                    ConfirmRequestObj parameters) throws SOAPFaultException;
 
 }

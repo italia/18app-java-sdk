@@ -1,16 +1,11 @@
 package test;
 
-import com.sun.deploy.net.HttpResponse;
-import it.mibact.bonus.verificavoucher.*;
-import sun.net.www.http.HttpClient;
+import it.mibact.bonus.verificavoucher.Check;
+import it.mibact.bonus.verificavoucher.CheckRequestObj;
+import it.mibact.bonus.verificavoucher.CheckResponse;
+import it.mibact.bonus.verificavoucher.VerificaVoucher_Service;
 
-import javax.net.ssl.SSLContext;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 
 public class TestHub {
 
@@ -20,13 +15,19 @@ public class TestHub {
         System.setProperty("javax.net.ssl.trustStore", "cacerts");
         System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
 
-        VerificaVoucher_Service verificaVoucher_service = new VerificaVoucher_Service();
+        VerificaVoucher_Service verificaVoucher_service = new VerificaVoucher_Service("AAAAAA00H01H501P.p12", "m3D0T4aM");
         CheckRequestObj checkRequestObj = new CheckRequestObj();
         Check check = new Check();
-        check.setCodiceVoucher("11aa22bb");
+        check.setCodiceVoucher("2a75f266");
         check.setTipoOperazione("1");
         checkRequestObj.setCheckReq(check);
-        CheckResponse checkResp = verificaVoucher_service.getVerificaVoucherSOAP().check(checkRequestObj).getCheckResp();
+        CheckResponse checkResp = null;
+        try {
+            checkResp = verificaVoucher_service.getVerificaVoucherSOAP().check(checkRequestObj).getCheckResp();
+        } catch (Exception e) {
+            // TODO: 07/10/17 Navigare il DOM alla ricerca del codice di errore.
+            e.printStackTrace();
+        }
 
 
         System.out.println(checkResp);
