@@ -23,8 +23,7 @@ public class TestHub {
         VerificaVoucher_Service verificaVoucher_service = new VerificaVoucher_Service();
         CheckRequestObj checkRequestObj = new CheckRequestObj();
         Check check = new Check();
-        check.setCodiceVoucher("1");
-        check.setPartitaIvaEsercente("1");
+        check.setCodiceVoucher("11aa22bb");
         check.setTipoOperazione("1");
         checkRequestObj.setCheckReq(check);
         CheckResponse checkResp = verificaVoucher_service.getVerificaVoucherSOAP().check(checkRequestObj).getCheckResp();
