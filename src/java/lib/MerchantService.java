@@ -32,7 +32,7 @@ public class MerchantService {
      * @param op type of operation requested.
      * @param codVoucher voucher code of the coupon.
      * @param partitaIva optional.
-     * @return
+     * @return CheckResponse data structure filled with values
      */
     private CheckResponse checkOperation(CheckOperation op, String codVoucher, String partitaIva) throws SOAPFaultException {
 
@@ -50,16 +50,82 @@ public class MerchantService {
 
     /**
      * Overloading method of {@link #checkOperation(CheckOperation, String, String)}
-     * @param op
-     * @param codVoucher
-     * @return
+     * @param op type of operation requested.
+     * @param codVoucher voucher code of the coupon.
+     * @return CheckResponse data structure filled with values
      */
     private CheckResponse checkOperation(CheckOperation op, String codVoucher) throws SOAPFaultException {
         return checkOperation(op, codVoucher, null);
     }
 
     /**
-     * Method which issues a Check operation.
+     * Method which issue a check only operation (without spending the actual voucher).
+     * @param codVoucher voucher code of the coupon.
+     * @param partitaIva optional.
+     * @return CheckResponse data structure filled with values
+     * @throws SOAPFaultException
+     */
+    public CheckResponse checkOnlyOperation(String codVoucher, String partitaIva) throws SOAPFaultException {
+        return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher, partitaIva);
+    }
+
+    /**
+     * Overload method of {@link #checkOperation(CheckOperation, String)}
+     * @param codVoucher voucher code of the coupon.
+     * @return CheckResponse data structure filled with values
+     * @throws SOAPFaultException
+     */
+    public CheckResponse checkOnlyOperation(String codVoucher) throws SOAPFaultException {
+        return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher);
+    }
+
+    /**
+     * Method which issue a check and consume operation
+     * (spending the actual voucher).
+     * @param codVoucher voucher code of the coupon.
+     * @param partitaIva optional.
+     * @return CheckResponse data structure filled with values
+     * @throws SOAPFaultException
+     */
+    public CheckResponse checkAndConsumeOperation(String codVoucher, String partitaIva) throws SOAPFaultException {
+        return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher, partitaIva);
+    }
+
+    /**
+     * Overloading method of {@link #checkAndConsumeOperation(String, String)}
+     * @param codVoucher voucher code of the coupon.
+     * @return CheckResponse data structure filled with values
+     * @throws SOAPFaultException
+     */
+    public CheckResponse checkAndConsumeOperation(String codVoucher) throws SOAPFaultException {
+        return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher);
+    }
+
+    /**
+     * Method which issue a check and freeze operation
+     * (freezing it for as long as necessary to carry out an availability check in stock or for
+     * other specific situations).
+     * @param codVoucher voucher code of the coupon.
+     * @param partitaIva optional.
+     * @return CheckResponse data structure filled with values
+     * @throws SOAPFaultException
+     */
+    public CheckResponse checkAndFreezeOperation(String codVoucher, String partitaIva) throws SOAPFaultException {
+        return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher, partitaIva);
+    }
+
+    /**
+     * Overloading methood of {@link #checkAndFreezeOperation(String, String)}
+     * @param codVoucher voucher code of the coupon.
+     * @return CheckResponse data structure filled with values
+     * @throws SOAPFaultException
+     */
+    public CheckResponse checkAndFreezeOperation(String codVoucher) throws SOAPFaultException {
+        return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher);
+    }
+
+    /**
+     * Method which issues a Confirm operation.
      * @param op type of operation requested.
      * @param codVoucher voucher code of the coupon.
      * @param importo amount confirmed by the operator.
@@ -77,31 +143,14 @@ public class MerchantService {
         return service.getVerificaVoucherSOAP().confirm(confirmRequestObj).getCheckResp();
     }
 
-    public CheckResponse checkOnlyOperation(String codVoucher, String partitaIva) throws SOAPFaultException {
-        return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher, partitaIva);
-    }
-
-    public CheckResponse checkOnlyOperation(String codVoucher) throws SOAPFaultException {
-        return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher);
-    }
-
-    public CheckResponse checkAndConsume(String codVoucher, String partitaIva) throws SOAPFaultException {
-        return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher, partitaIva);
-    }
-
-    public CheckResponse checkAndConsume(String codVoucher) throws SOAPFaultException {
-        return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher);
-    }
-
-    public CheckResponse checkAndFreeze(String codVoucher, String partitaIva) throws SOAPFaultException {
-        return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher, partitaIva);
-    }
-
-    public CheckResponse checkAndFreeze(String codVoucher) throws SOAPFaultException {
-        return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher);
-    }
-
-    public ConfirmResponse confirm(String codVoucher, double importo) throws SOAPFaultException {
+    /**
+     * Method which issues a Confirm operation.
+     * @param codVoucher voucher code of the coupon.
+     * @param importo amount confirmed by the operator.
+     * @return
+     * @throws SOAPFaultException
+     */
+    public ConfirmResponse confirmOperation(String codVoucher, double importo) throws SOAPFaultException {
         return confirmOperation(ConfirmOperation.CONFIRM, codVoucher, importo);
     }
 

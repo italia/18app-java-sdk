@@ -1,6 +1,8 @@
 package lib.model;
 
-
+/**
+ * This enum lists possibile operation on Confirm operation in Verifica Voucher SOAP service.
+ */
 public enum ConfirmOperation {
 
     CONFIRM("1");
