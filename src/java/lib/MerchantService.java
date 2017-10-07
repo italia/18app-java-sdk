@@ -1,10 +1,13 @@
 package lib;
 
 import it.mibact.bonus.verificavoucher.*;
+import lib.invoice.Invoice;
 import lib.model.CheckOperation;
 import lib.model.ConfirmOperation;
 
 import javax.xml.ws.soap.SOAPFaultException;
+
+import static lib.model.ConfirmOperation.CONFIRM;
 
 /**
  * Library Interface
@@ -41,7 +44,7 @@ public class MerchantService {
      * @param partitaIva optional.
      * @return
      */
-    private CheckResponse checkOperation(CheckOperation op, String codVoucher, String partitaIva) throws CheckRequestException {
+    private CheckResponse checkOperation(CheckOperation op, String codVoucher, String partitaIva) throws VoucherVerificationException {
 
         Check check = new Check();
         check.setTipoOperazione(op.getType());
@@ -60,7 +63,7 @@ public class MerchantService {
 
     }
 
-    private void handleFault(SOAPFaultException failure) throws CheckRequestException {
+    private void handleFault(SOAPFaultException failure) throws VoucherVerificationException {
         // TODO: 07/10/17 Navigare il DOM alla ricerca del codice di errore.
         System.out.println("Naviga dom");
 
@@ -73,21 +76,21 @@ public class MerchantService {
 
         switch (code){
             case WRONG_PARAMETERS:
-                throw new CheckRequestException(WRONG_PARAMETERS,"Error in the input parameters, check and try again");
+                throw new VoucherVerificationException(WRONG_PARAMETERS,"Error in the input parameters, check and try again");
             case VOUCHER_NOT_FOUND:
-                throw new CheckRequestException(VOUCHER_NOT_FOUND,"The requested voucher is not available on the system. It could be already\n" +
+                throw new VoucherVerificationException(VOUCHER_NOT_FOUND,"The requested voucher is not available on the system. It could be already\n" +
                         "collected or canceled");
             case NOT_ACTIVE_USER:
-                throw new CheckRequestException(NOT_ACTIVE_USER,"User inactive, voucher impossible to verify");
+                throw new VoucherVerificationException(NOT_ACTIVE_USER,"User inactive, voucher impossible to verify");
             case FAILED_ACTIVATION_USER:
-                throw new CheckRequestException(FAILED_ACTIVATION_USER,"Impossible to activate the user. Please verify input parameters and that the user\n" +
+                throw new VoucherVerificationException(FAILED_ACTIVATION_USER,"Impossible to activate the user. Please verify input parameters and that the user\n" +
                         "has not been already activated.");
             case WRONG_AMOUNT:
-                throw new CheckRequestException(WRONG_AMOUNT,"The amount claimed is greater than the amount of the selected voucher");
+                throw new VoucherVerificationException(WRONG_AMOUNT,"The amount claimed is greater than the amount of the selected voucher");
             case WRONG_CATEGORY:
-                throw new CheckRequestException(WRONG_CATEGORY,"Category and type of this voucher are not aligned with category and type managed by the user.");
+                throw new VoucherVerificationException(WRONG_CATEGORY,"Category and type of this voucher are not aligned with category and type managed by the user.");
             default:
-                throw new CheckRequestException(UNKNOWN_FAULT,"Unknown fault");
+                throw new VoucherVerificationException(UNKNOWN_FAULT,"Unknown fault");
 
 
         }
@@ -100,7 +103,7 @@ public class MerchantService {
      * @param codVoucher
      * @return
      */
-    private CheckResponse checkOperation(CheckOperation op, String codVoucher) throws CheckRequestException {
+    private CheckResponse checkOperation(CheckOperation op, String codVoucher) throws VoucherVerificationException {
         return checkOperation(op, codVoucher, null);
     }
 
@@ -111,7 +114,7 @@ public class MerchantService {
      * @return CheckResponse data structure filled with values
      * @throws SOAPFaultException
      */
-    public CheckResponse checkOnlyOperation(String codVoucher, String partitaIva) throws CheckRequestException {
+    public CheckResponse checkOnlyOperation(String codVoucher, String partitaIva) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher, partitaIva);
     }
 
@@ -121,7 +124,7 @@ public class MerchantService {
      * @return CheckResponse data structure filled with values
      * @throws SOAPFaultException
      */
-    public CheckResponse checkOnlyOperation(String codVoucher) throws CheckRequestException {
+    public CheckResponse checkOnlyOperation(String codVoucher) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher);
     }
 
@@ -133,8 +136,22 @@ public class MerchantService {
      * @return CheckResponse data structure filled with values
      * @throws SOAPFaultException
      */
-    public CheckResponse checkAndConsumeOperation(String codVoucher, String partitaIva) throws CheckRequestException {
+    public CheckResponse checkAndConsumeOperation(String codVoucher, String partitaIva) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher, partitaIva);
+    }
+
+    public CheckResponse checkAndConsume(String codVoucher) {
+
+        CheckResponse checkResponse = null;
+        try {
+            checkResponse = checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher);
+        } catch (VoucherVerificationException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Invoice.createInvoiceLine(codVoucher, checkResponse);
+        return checkResponse;
     }
 
     /**
@@ -143,7 +160,7 @@ public class MerchantService {
      * @return CheckResponse data structure filled with values
      * @throws SOAPFaultException
      */
-    public CheckResponse checkAndConsumeOperation(String codVoucher) throws CheckRequestException {
+    public CheckResponse checkAndConsumeOperation(String codVoucher) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher);
     }
 
@@ -156,7 +173,7 @@ public class MerchantService {
      * @return CheckResponse data structure filled with values
      * @throws SOAPFaultException
      */
-    public CheckResponse checkAndFreezeOperation(String codVoucher, String partitaIva) throws CheckRequestException {
+    public CheckResponse checkAndFreezeOperation(String codVoucher, String partitaIva) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher, partitaIva);
     }
 
@@ -166,7 +183,7 @@ public class MerchantService {
      * @return CheckResponse data structure filled with values
      * @throws SOAPFaultException
      */
-    public CheckResponse checkAndFreezeOperation(String codVoucher) throws CheckRequestException {
+    public CheckResponse checkAndFreezeOperation(String codVoucher) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher);
     }
 
@@ -177,9 +194,24 @@ public class MerchantService {
      * @param importo amount confirmed by the operator.
      * @return
      */
-    private ConfirmResponse confirmOperation(ConfirmOperation op, String codVoucher, double importo) throws SOAPFaultException {
+    private ConfirmResponse confirmOperation(ConfirmOperation op, String codVoucher, double importo) throws VoucherVerificationException {
 
-        return null;
+        Confirm confirm = new Confirm();
+        confirm.setTipoOperazione(op.getType());
+        confirm.setCodiceVoucher(codVoucher);
+        confirm.setImporto(importo);
+
+        ConfirmRequestObj confirmRequestObj = new ConfirmRequestObj();
+        confirmRequestObj.setCheckReq(confirm);
+
+        try {
+
+            return service.getVerificaVoucherSOAP().confirm(confirmRequestObj).getCheckResp();
+
+        } catch (SOAPFaultException failure){
+            handleFault(failure);
+            return null;
+        }
     }
 
     public static void main(String[] args) {
@@ -190,21 +222,21 @@ public class MerchantService {
         MerchantService merchantService = new MerchantService("AAAAAA00H01H501P.p12", "m3D0T4aM");
 
         try {
-            merchantService.checkAndConsumeOperation("tEWY2vxG");
+            merchantService.confirmOperation(ConfirmOperation.CONFIRM, "tEWY2vxG", 600000);
 
-        } catch (CheckRequestException e) {
+        } catch (VoucherVerificationException e) {
             e.printStackTrace();
         }
 
         try {
             merchantService.checkAndFreezeOperation("NQSvkHaZ");
-        } catch (CheckRequestException e) {
+        } catch (VoucherVerificationException e) {
             e.printStackTrace();
         }
 
         try {
             merchantService.checkOnlyOperation("51YX0nbE");
-        } catch (CheckRequestException e) {
+        } catch (VoucherVerificationException e) {
             e.printStackTrace();
         }
 
