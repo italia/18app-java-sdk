@@ -102,11 +102,9 @@ public class MerchantService {
     private void handleFault(SOAPFaultException failure) throws VoucherVerificationException {
 
         String code = failure.getFault().getDetail().getFirstChild().getFirstChild().getFirstChild().getTextContent();
-        System.out.println("failure code() = " + code);
 
         String data =
                 failure.getFault().getDetail().getFirstChild().getFirstChild().getNextSibling().getFirstChild().getTextContent();
-        System.out.println("failure data = " + data);
 
         switch (code){
             case FaultCodes.WRONG_PARAMETERS:
