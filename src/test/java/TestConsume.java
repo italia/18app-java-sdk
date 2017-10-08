@@ -1,16 +1,13 @@
-package test;
-
 import it.mibact.bonus.verificavoucher.CheckResponse;
-import it.mibact.bonus.verificavoucher.ConfirmResponse;
 import lib.CertificateException;
 import lib.MerchantService;
 import lib.VoucherVerificationException;
 
-public class TestFreezeAndConfirm {
+public class TestConsume {
 
     public static void main(String[] args) {
 
-        String codVoucher = "Zirfsz0d";
+        String codVoucher = "iThHnbGY";
 
         try {
 
@@ -18,11 +15,9 @@ public class TestFreezeAndConfirm {
             // Does not consume the voucher and does not scale the amount from the purse
             // The merchant is now active
 
-            CheckResponse checkResponse = service.checkAndFreezeOperation(codVoucher);
-            System.out.println(checkResponse);
+            CheckResponse checkResponse = service.checkAndConsumeOperation(codVoucher);
 
-            ConfirmResponse confirmResponse = service.confirmOperation(codVoucher, checkResponse.getImporto());
-            System.out.println(confirmResponse);
+            System.out.println(checkResponse);
 
         } catch (VoucherVerificationException | CertificateException e) {
             e.printStackTrace();

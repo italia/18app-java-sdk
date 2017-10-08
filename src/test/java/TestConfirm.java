@@ -1,4 +1,4 @@
-package test;
+
 
 import it.mibact.bonus.verificavoucher.Confirm;
 import it.mibact.bonus.verificavoucher.ConfirmRequestObj;
