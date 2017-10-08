@@ -1,9 +1,9 @@
-package lib;
+package it.app18.verificavoucher;
 
 import com.sun.xml.internal.ws.client.ClientTransportException;
 import it.mibact.bonus.verificavoucher.*;
-import lib.model.CheckOperation;
-import lib.model.ConfirmOperation;
+import it.app18.verificavoucher.model.CheckOperation;
+import it.app18.verificavoucher.model.ConfirmOperation;
 
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -159,7 +159,7 @@ public class MerchantService {
      * @param codVoucher voucher code of the coupon.
      * @param partitaIva optional.
      * @return CheckResponse data structure filled with values
-     * @throws VoucherVerificationException
+     * @throws lib.VoucherVerificationException
      */
     public CheckResponse checkOnlyOperation(String codVoucher, String partitaIva) throws VoucherVerificationException, CertificateException {
         return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher, partitaIva);
@@ -169,7 +169,7 @@ public class MerchantService {
      * Overload method of {@link #checkOperation(CheckOperation, String)}
      * @param codVoucher voucher code of the coupon.
      * @return CheckResponse data structure filled with values
-     * @throws VoucherVerificationException
+     * @throws lib.VoucherVerificationException
      */
     public CheckResponse checkOnlyOperation(String codVoucher) throws VoucherVerificationException, CertificateException {
         return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher);
@@ -181,7 +181,7 @@ public class MerchantService {
      * @param codVoucher voucher code of the coupon.
      * @param partitaIva optional.
      * @return CheckResponse data structure filled with values
-     * @throws VoucherVerificationException
+     * @throws lib.VoucherVerificationException
      */
     public CheckResponse checkAndConsumeOperation(String codVoucher, String partitaIva) throws VoucherVerificationException, CertificateException {
         return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher, partitaIva);
@@ -196,7 +196,7 @@ public class MerchantService {
      * Overloading method of {@link #checkAndConsumeOperation(String, String)}
      * @param codVoucher voucher code of the coupon.
      * @return CheckResponse data structure filled with values
-     * @throws VoucherVerificationException
+     * @throws lib.VoucherVerificationException
      */
     public CheckResponse checkAndConsumeOperation(String codVoucher) throws VoucherVerificationException, CertificateException {
         return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher);
@@ -209,7 +209,7 @@ public class MerchantService {
      * @param codVoucher voucher code of the coupon.
      * @param partitaIva optional.
      * @return CheckResponse data structure filled with values
-     * @throws VoucherVerificationException
+     * @throws lib.VoucherVerificationException
      */
     public CheckResponse checkAndFreezeOperation(String codVoucher, String partitaIva) throws VoucherVerificationException, CertificateException {
         return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher, partitaIva);
@@ -219,7 +219,7 @@ public class MerchantService {
      * Overloading methood of {@link #checkAndFreezeOperation(String, String)}
      * @param codVoucher voucher code of the coupon.
      * @return CheckResponse data structure filled with values
-     * @throws VoucherVerificationException
+     * @throws lib.VoucherVerificationException
      */
     public CheckResponse checkAndFreezeOperation(String codVoucher) throws VoucherVerificationException, CertificateException {
         return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher);
