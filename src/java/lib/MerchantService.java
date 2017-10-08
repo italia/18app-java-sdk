@@ -14,6 +14,9 @@ import static lib.model.ConfirmOperation.CONFIRM;
  */
 public class MerchantService {
 
+    // Constants
+    private final static String ACTIVATION_VOUCHER_CODE = "11aa22bb";
+
     private String keystorePath;
     private String password;
     // FIXME: 07/10/2017 public for sdk user
@@ -31,10 +34,13 @@ public class MerchantService {
      * @param keystorePath to the client certificate.
      * @param password which belongs to the keystore.
      */
-    public MerchantService(String keystorePath, String password) {
+    public MerchantService(String keystorePath, String password) throws VoucherVerificationException {
         this.keystorePath = keystorePath;
         this.password = password;
         service = new VerificaVoucher_Service(keystorePath, password);
+
+        // Always activate certificate before using VerificaVoucher service
+        activateCertificate();
     }
 
     /**
@@ -112,7 +118,7 @@ public class MerchantService {
      * @param codVoucher voucher code of the coupon.
      * @param partitaIva optional.
      * @return CheckResponse data structure filled with values
-     * @throws SOAPFaultException
+     * @throws VoucherVerificationException
      */
     public CheckResponse checkOnlyOperation(String codVoucher, String partitaIva) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher, partitaIva);
@@ -122,7 +128,7 @@ public class MerchantService {
      * Overload method of {@link #checkOperation(CheckOperation, String)}
      * @param codVoucher voucher code of the coupon.
      * @return CheckResponse data structure filled with values
-     * @throws SOAPFaultException
+     * @throws VoucherVerificationException
      */
     public CheckResponse checkOnlyOperation(String codVoucher) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_ONLY_VOUCHER, codVoucher);
@@ -134,7 +140,7 @@ public class MerchantService {
      * @param codVoucher voucher code of the coupon.
      * @param partitaIva optional.
      * @return CheckResponse data structure filled with values
-     * @throws SOAPFaultException
+     * @throws VoucherVerificationException
      */
     public CheckResponse checkAndConsumeOperation(String codVoucher, String partitaIva) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher, partitaIva);
@@ -158,7 +164,7 @@ public class MerchantService {
      * Overloading method of {@link #checkAndConsumeOperation(String, String)}
      * @param codVoucher voucher code of the coupon.
      * @return CheckResponse data structure filled with values
-     * @throws SOAPFaultException
+     * @throws VoucherVerificationException
      */
     public CheckResponse checkAndConsumeOperation(String codVoucher) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher);
@@ -171,7 +177,7 @@ public class MerchantService {
      * @param codVoucher voucher code of the coupon.
      * @param partitaIva optional.
      * @return CheckResponse data structure filled with values
-     * @throws SOAPFaultException
+     * @throws VoucherVerificationException
      */
     public CheckResponse checkAndFreezeOperation(String codVoucher, String partitaIva) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher, partitaIva);
@@ -181,7 +187,7 @@ public class MerchantService {
      * Overloading methood of {@link #checkAndFreezeOperation(String, String)}
      * @param codVoucher voucher code of the coupon.
      * @return CheckResponse data structure filled with values
-     * @throws SOAPFaultException
+     * @throws VoucherVerificationException
      */
     public CheckResponse checkAndFreezeOperation(String codVoucher) throws VoucherVerificationException {
         return checkOperation(CheckOperation.CHECK_FREEZE_VOUCHER, codVoucher);
@@ -214,13 +220,28 @@ public class MerchantService {
         }
     }
 
-    public static void main(String[] args) {
+    /**
+     * Activate the merchant certificate using the protocol
+     * (use Check Operation with following inputs -> type = 1, VoucherCode = 11aa22bb)
+     * See https://www.18app.italia.it/static/Linee%20Guida%20Esercenti.pdf
+     */
+    private void activateCertificate() throws VoucherVerificationException {
+
+        CheckResponse checkResponse = checkOnlyOperation(ACTIVATION_VOUCHER_CODE);
+        System.out.println(checkResponse.toString());
+
+    }
+
+    public static void main(String[] args) throws VoucherVerificationException {
 
         System.setProperty("javax.net.ssl.trustStore", "cacerts");
         System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
 
+
+
         MerchantService merchantService = new MerchantService("AAAAAA00H01H501P.p12", "m3D0T4aM");
 
+        /*
         try {
             merchantService.confirmOperation(ConfirmOperation.CONFIRM, "ORTEV4F0", 600000);
 
@@ -233,6 +254,7 @@ public class MerchantService {
         } catch (VoucherVerificationException e) {
             e.printStackTrace();
         }
+        */
 
         try {
             merchantService.checkOnlyOperation("51YX0nbE");

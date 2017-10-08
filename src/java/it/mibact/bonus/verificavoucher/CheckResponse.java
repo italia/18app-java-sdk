@@ -162,4 +162,14 @@ public class CheckResponse {
         this.importo = value;
     }
 
+    @Override
+    public String toString() {
+        return "CheckResponse{" +
+                "nominativoBeneficiario='" + nominativoBeneficiario + '\'' +
+                ", partitaIvaEsercente='" + partitaIvaEsercente + '\'' +
+                ", ambito='" + ambito + '\'' +
+                ", bene='" + bene + '\'' +
+                ", importo=" + importo +
+                '}';
+    }
 }
