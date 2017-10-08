@@ -81,14 +81,30 @@ public class MerchantService {
 
     }
 
+
+    /* When server response with soapenv:Fault, we need to take handle a fault and take exceptionCode and exceptionMessage.
+       <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+          <soapenv:Body>
+             <soapenv:Fault>
+                <faultcode>soapenv:Server</faultcode>
+                <faultstring>it.finanze.verificavoucher.fault.FaultVoucher</faultstring>
+                <detail>
+                   <ns2:FaultVoucher xmlns:ns2="http://bonus.mibact.it/VerificaVoucher/">
+                      <exceptionCode>01</exceptionCode>
+                      <exceptionMessage>Errore nel formato dei parametri in input, verificarli e riprovare</exceptionMessage>
+                   </ns2:FaultVoucher>
+                </detail>
+             </soapenv:Fault>
+          </soapenv:Body>
+        </soapenv:Envelope>
+     */
+
     private void handleFault(SOAPFaultException failure) throws VoucherVerificationException {
 
         String code = failure.getFault().getDetail().getFirstChild().getFirstChild().getFirstChild().getTextContent();
-        System.out.println("failure code() = " + code);
 
         String data =
                 failure.getFault().getDetail().getFirstChild().getFirstChild().getNextSibling().getFirstChild().getTextContent();
-        System.out.println("failure data = " + data);
 
         switch (code){
             case FaultCodes.WRONG_PARAMETERS:
