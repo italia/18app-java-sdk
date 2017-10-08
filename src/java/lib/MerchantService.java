@@ -16,6 +16,8 @@ public class MerchantService {
     private final static boolean DEBUG_MODE = true;
     private final static String ACTIVATION_VOUCHER_CODE = "11aa22bb";
 
+    private String keystorePath;
+    private String password;
     // FIXME: 07/10/2017 public for sdk user
     private final static String WRONG_PARAMETERS = "01";
     private final static String VOUCHER_NOT_FOUND = "02";
@@ -122,6 +124,33 @@ public class MerchantService {
     }
 
     /**
+     * Method which issues a Confirm operation.
+     * @param op type of operation requested.
+     * @param codVoucher voucher code of the coupon.
+     * @param importo amount confirmed by the operator.
+     * @return
+     */
+    private ConfirmResponse confirmOperation(ConfirmOperation op, String codVoucher, double importo) throws VoucherVerificationException {
+
+        Confirm confirm = new Confirm();
+        confirm.setTipoOperazione(op.getType());
+        confirm.setCodiceVoucher(codVoucher);
+        confirm.setImporto(importo);
+
+        ConfirmRequestObj confirmRequestObj = new ConfirmRequestObj();
+        confirmRequestObj.setCheckReq(confirm);
+
+        try {
+
+            return service.getVerificaVoucherSOAP().confirm(confirmRequestObj).getCheckResp();
+
+        } catch (SOAPFaultException failure){
+            handleFault(failure);
+            return null;
+        }
+    }
+
+    /**
      * Method which issue a check only operation (without spending the actual voucher).
      * @param codVoucher voucher code of the coupon.
      * @param partitaIva optional.
@@ -194,29 +223,12 @@ public class MerchantService {
 
     /**
      * Method which issues a Confirm operation.
-     * @param op type of operation requested.
      * @param codVoucher voucher code of the coupon.
      * @param importo amount confirmed by the operator.
      * @return
      */
-    private ConfirmResponse confirmOperation(ConfirmOperation op, String codVoucher, double importo) throws VoucherVerificationException {
-
-        Confirm confirm = new Confirm();
-        confirm.setTipoOperazione(op.getType());
-        confirm.setCodiceVoucher(codVoucher);
-        confirm.setImporto(importo);
-
-        ConfirmRequestObj confirmRequestObj = new ConfirmRequestObj();
-        confirmRequestObj.setCheckReq(confirm);
-
-        try {
-
-            return service.getVerificaVoucherSOAP().confirm(confirmRequestObj).getCheckResp();
-
-        } catch (SOAPFaultException failure){
-            handleFault(failure);
-            return null;
-        }
+    public ConfirmResponse confirmOperation(String codVoucher, double importo) throws VoucherVerificationException {
+        return confirmOperation(ConfirmOperation.CONFIRM, codVoucher, importo);
     }
 
     /**
@@ -224,10 +236,11 @@ public class MerchantService {
      * (use Check Operation with following inputs -> type = 1, VoucherCode = 11aa22bb)
      * See https://www.18app.italia.it/static/Linee%20Guida%20Esercenti.pdf
      */
-    private void activateCertificate() throws VoucherVerificationException, CertificateException {
+    public CheckResponse activateCertificate() throws VoucherVerificationException, CertificateException {
 
         CheckResponse checkResponse = checkOnlyOperation(ACTIVATION_VOUCHER_CODE);
         System.out.println(checkResponse.toString());
+        return checkResponse;
 
     }
 
