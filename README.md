@@ -20,7 +20,7 @@ Initialize the service with your merchant certificate (currently in format PKCS1
 MerchantService service = new MerchantService("\path\to\merchant\certificate.p12","certificate_password")
 ```
 
-Check Operations. Pass customer voucher code
+##### Check Operations. Pass customer voucher code
 ```
 try {       
     service.checkOnlyOperation(voucherCode);
