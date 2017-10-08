@@ -14,6 +14,31 @@ Merchants must therefore register to the web application in order to sell their 
 This certificate X509 will be generated and downloadable in .cer format directly via
 the dedicated web application for traders, in an authenticated area.
 
+### How to use it
+Initialize the service with your merchant certificate (currently in format PKCS12) and its password
+```
+MerchantService service = new MerchantService("\path\to\merchant\certificate.p12","certificate_password")
+```
+
+##### Check Operations. Pass customer voucher code
+```
+try {
+    service.checkOnlyOperation(voucherCode);
+} catch (CertificateException e){
+    // Problems with web service certificate
+} catch (VoucherVerificationException vve){
+    if (vve.getId() == FaultCodes.WRONG_PARAMETERS) {
+        // Handle wrong parameters
+    } else {
+        // Handle other FaultCodes ...
+    }
+
+}
+```
+Confirm Operation
+```
+MerchantService = new MerchantService("\path\to\merchant\certificate.p12","certificate_password")
+```
 
 ### Installing
 

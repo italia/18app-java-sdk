@@ -3,7 +3,6 @@ package it.mibact.bonus.verificavoucher;
 
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
 
-import javax.jws.HandlerChain;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.xml.namespace.QName;

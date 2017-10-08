@@ -16,14 +16,20 @@ public class MerchantService {
     private final static boolean DEBUG_MODE = true;
     private final static String ACTIVATION_VOUCHER_CODE = "11aa22bb";
 
-    // FIXME: 07/10/2017 public for sdk user
-    private final static String WRONG_PARAMETERS = "01";
-    private final static String VOUCHER_NOT_FOUND = "02";
-    private final static String FAILED_ACTIVATION_USER = "03";
-    private final static String WRONG_AMOUNT = "04";
-    private final static String NOT_ACTIVE_USER = "05";
-    private final static String WRONG_CATEGORY = "06";
-    private final static String UNKNOWN_FAULT ="00";
+    // Fault Codes
+    public class FaultCodes {
+
+        public final static String WRONG_PARAMETERS = "01";
+        public final static String VOUCHER_NOT_FOUND = "02";
+        public final static String FAILED_ACTIVATION_USER = "03";
+        public final static String WRONG_AMOUNT = "04";
+        public final static String NOT_ACTIVE_USER = "05";
+        public final static String WRONG_CATEGORY = "06";
+        public final static String UNKNOWN_FAULT = "00";
+
+    }
+
+    // Internal WS Client
     private VerificaVoucher_Service service;
 
     /**
@@ -107,22 +113,22 @@ public class MerchantService {
         System.out.println("failure data = " + data);
 
         switch (code){
-            case WRONG_PARAMETERS:
-                throw new VoucherVerificationException(WRONG_PARAMETERS,"Error in the input parameters, check and try again");
-            case VOUCHER_NOT_FOUND:
-                throw new VoucherVerificationException(VOUCHER_NOT_FOUND,"The requested voucher is not available on the system. It could be already\n" +
+            case FaultCodes.WRONG_PARAMETERS:
+                throw new VoucherVerificationException(FaultCodes.WRONG_PARAMETERS,"Error in the input parameters, check and try again");
+            case FaultCodes.VOUCHER_NOT_FOUND:
+                throw new VoucherVerificationException(FaultCodes.VOUCHER_NOT_FOUND,"The requested voucher is not available on the system. It could be already\n" +
                         "collected or canceled");
-            case NOT_ACTIVE_USER:
-                throw new VoucherVerificationException(NOT_ACTIVE_USER,"User inactive, voucher impossible to verify");
-            case FAILED_ACTIVATION_USER:
-                throw new VoucherVerificationException(FAILED_ACTIVATION_USER,"Impossible to activate the user. Please verify input parameters and that the user\n" +
+            case FaultCodes.NOT_ACTIVE_USER:
+                throw new VoucherVerificationException(FaultCodes.NOT_ACTIVE_USER,"User inactive, voucher impossible to verify");
+            case FaultCodes.FAILED_ACTIVATION_USER:
+                throw new VoucherVerificationException(FaultCodes.FAILED_ACTIVATION_USER,"Impossible to activate the user. Please verify input parameters and that the user\n" +
                         "has not been already activated.");
-            case WRONG_AMOUNT:
-                throw new VoucherVerificationException(WRONG_AMOUNT,"The amount claimed is greater than the amount of the selected voucher");
-            case WRONG_CATEGORY:
-                throw new VoucherVerificationException(WRONG_CATEGORY,"Category and type of this voucher are not aligned with category and type managed by the user.");
+            case FaultCodes.WRONG_AMOUNT:
+                throw new VoucherVerificationException(FaultCodes.WRONG_AMOUNT,"The amount claimed is greater than the amount of the selected voucher");
+            case FaultCodes.WRONG_CATEGORY:
+                throw new VoucherVerificationException(FaultCodes.WRONG_CATEGORY,"Category and type of this voucher are not aligned with category and type managed by the user.");
             default:
-                throw new VoucherVerificationException(UNKNOWN_FAULT,"Unknown fault");
+                throw new VoucherVerificationException(FaultCodes.UNKNOWN_FAULT,"Unknown fault");
 
 
         }
@@ -137,6 +143,33 @@ public class MerchantService {
      */
     private CheckResponse checkOperation(CheckOperation op, String codVoucher) throws VoucherVerificationException, CertificateException {
         return checkOperation(op, codVoucher, null);
+    }
+
+    /**
+     * Method which issues a Confirm operation.
+     * @param op type of operation requested.
+     * @param codVoucher voucher code of the coupon.
+     * @param importo amount confirmed by the operator.
+     * @return
+     */
+    private ConfirmResponse confirmOperation(ConfirmOperation op, String codVoucher, double importo) throws VoucherVerificationException {
+
+        Confirm confirm = new Confirm();
+        confirm.setTipoOperazione(op.getType());
+        confirm.setCodiceVoucher(codVoucher);
+        confirm.setImporto(importo);
+
+        ConfirmRequestObj confirmRequestObj = new ConfirmRequestObj();
+        confirmRequestObj.setCheckReq(confirm);
+
+        try {
+
+            return service.getVerificaVoucherSOAP().confirm(confirmRequestObj).getCheckResp();
+
+        } catch (SOAPFaultException failure){
+            handleFault(failure);
+            return null;
+        }
     }
 
     /**
@@ -212,29 +245,12 @@ public class MerchantService {
 
     /**
      * Method which issues a Confirm operation.
-     * @param op type of operation requested.
      * @param codVoucher voucher code of the coupon.
      * @param importo amount confirmed by the operator.
      * @return
      */
-    private ConfirmResponse confirmOperation(ConfirmOperation op, String codVoucher, double importo) throws VoucherVerificationException {
-
-        Confirm confirm = new Confirm();
-        confirm.setTipoOperazione(op.getType());
-        confirm.setCodiceVoucher(codVoucher);
-        confirm.setImporto(importo);
-
-        ConfirmRequestObj confirmRequestObj = new ConfirmRequestObj();
-        confirmRequestObj.setCheckReq(confirm);
-
-        try {
-
-            return service.getVerificaVoucherSOAP().confirm(confirmRequestObj).getCheckResp();
-
-        } catch (SOAPFaultException failure){
-            handleFault(failure);
-            return null;
-        }
+    public ConfirmResponse confirmOperation(String codVoucher, double importo) throws VoucherVerificationException {
+        return confirmOperation(ConfirmOperation.CONFIRM, codVoucher, importo);
     }
 
     /**
@@ -242,10 +258,11 @@ public class MerchantService {
      * (use Check Operation with following inputs -> type = 1, VoucherCode = 11aa22bb)
      * See https://www.18app.italia.it/static/Linee%20Guida%20Esercenti.pdf
      */
-    private void activateCertificate() throws VoucherVerificationException, CertificateException {
+    public CheckResponse activateCertificate() throws VoucherVerificationException, CertificateException {
 
         CheckResponse checkResponse = checkOnlyOperation(ACTIVATION_VOUCHER_CODE);
         System.out.println(checkResponse.toString());
+        return checkResponse;
 
     }
 

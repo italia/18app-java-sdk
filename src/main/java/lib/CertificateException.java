@@ -5,14 +5,12 @@ package lib;
  */
 public class CertificateException extends Exception {
 
-    private String id;
     private String message;
 
     @Override
     public String toString() {
-        return "VoucherVerificationException{" +
-                "id='" + id + '\'' +
-                ", message='" + message + '\'' +
+        return "CertificateException{" +
+                "message='" + message + '\'' +
                 '}';
     }
 

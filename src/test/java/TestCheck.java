@@ -1,4 +1,4 @@
-package test;
+
 
 import it.mibact.bonus.verificavoucher.Check;
 import it.mibact.bonus.verificavoucher.CheckRequestObj;
@@ -19,22 +19,13 @@ public class TestCheck {
         VerificaVoucher_Service verificaVoucher_service = new VerificaVoucher_Service("AAAAAA00H01H501P.p12", "m3D0T4aM");
         CheckRequestObj checkRequestObj = new CheckRequestObj();
         Check check = new Check();
-        check.setCodiceVoucher("2a75f266");
+        check.setCodiceVoucher("tEWY2vxG");
         check.setTipoOperazione("1");
         checkRequestObj.setCheckReq(check);
         CheckResponse checkResp = null;
         try {
             checkResp = verificaVoucher_service.getVerificaVoucherSOAP().check(checkRequestObj).getCheckResp();
         } catch (SOAPFaultException failure) {
-            // TODO: 07/10/17 Navigare il DOM alla ricerca del codice di errore.
-            System.out.println("Naviga dom");
-
-            String code = failure.getFault().getDetail().getFirstChild().getFirstChild().getFirstChild().getTextContent();
-            System.out.println("failure code() = " + code);
-
-            String data =
-                    failure.getFault().getDetail().getFirstChild().getFirstChild().getNextSibling().getFirstChild().getTextContent();
-            System.out.println("failure data = " + data);
 
 
         }

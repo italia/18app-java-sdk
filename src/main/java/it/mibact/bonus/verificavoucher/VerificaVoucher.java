@@ -28,7 +28,7 @@ public interface VerificaVoucher {
      * 
      * @param parameters
      * @return
-     *     returns it.mibact.bonus.verificavoucher.CheckResponseObj
+     *     returns verificavoucher.CheckResponseObj
      */
     @WebMethod(operationName = "Check", action = "http://bonus.mibact.it/VerificaVoucher/Check")
     @WebResult(name = "CheckResponseObj", targetNamespace = "http://bonus.mibact.it/VerificaVoucher/", partName = "parameters")
@@ -40,7 +40,7 @@ public interface VerificaVoucher {
      * 
      * @param parameters
      * @return
-     *     returns it.mibact.bonus.verificavoucher.ConfirmResponseObj
+     *     returns verificavoucher.ConfirmResponseObj
      */
     @WebMethod(operationName = "Confirm", action = "http://bonus.mibact.it/VerificaVoucher/Confirm")
     @WebResult(name = "ConfirmResponseObj", targetNamespace = "http://bonus.mibact.it/VerificaVoucher/", partName = "parameters")
