@@ -22,23 +22,41 @@ MerchantService service = new MerchantService("\path\to\merchant\certificate.p12
 
 ##### Check Operations. Pass customer voucher code
 ```
-try {       
-    service.checkOnlyOperation(voucherCode);
-} catch (CertificateException e){
-    // Problems with web service certificate
-} catch (VoucherVerificationException vve){
-    if (vve.getId() == FaultCodes.WRONG_PARAMETERS) {
-        // Handle wrong parameters
-    } else {
-        // Handle other FaultCodes ...
+    try {       
+        service.checkOnlyOperation(voucherCode);
+    } catch (CertificateException e){
+        // Problems with web service certificate
+    } catch (VoucherVerificationException vve){
+        if (vve.getId() == FaultCodes.WRONG_PARAMETERS) {
+            // Handle wrong parameters
+        } else {
+            // Handle other FaultCodes ...
+        }
+        
     }
-    
-}
 ```
-Confirm Operation
+
+CheckAndFreeze Operation: freezes the voucher as long as necessary to carry out an availability check in stock or for
+     other specific situations
 ```
-MerchantService = new MerchantService("\path\to\merchant\certificate.p12","certificate_password")
+    service.checkAndFreeze();
+```  
+Confirm Operation. To be called after CheckAndFreeze to confirm the consumption of all the voucher 
+amount or only a part of the amount
+
 ```
+    service.confirm();
+```
+
+CheckAndConsume Operation: issues a check and consume operation (spending the actual voucher)
+```
+    service.checkAndConsume();
+``` 
+CheckOnly Operation: issues only the check of the voucher
+```
+    service.checkOnly();
+``` 
+
 
 ### Installing
 
