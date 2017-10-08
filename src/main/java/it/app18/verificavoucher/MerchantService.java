@@ -29,6 +29,10 @@ public class MerchantService {
 
     }
 
+    // Confirmation Codes
+    public static final String SUCCESS_CONFIRMATION = "OK";
+    public static final String FAILED_CONFIRMATION = "KO";
+
     // Internal WS Client
     private VerificaVoucher_Service service;
 
@@ -131,8 +135,8 @@ public class MerchantService {
 
     /**
      * Overloading method of {@link #checkOperation(CheckOperation, String, String)}
-     * @param op
-     * @param codVoucher
+     * @param op type of check operation
+     * @param codVoucher voucher code of the customer
      * @return
      */
     private CheckResponse checkOperation(CheckOperation op, String codVoucher) throws VoucherVerificationException, CertificateException {

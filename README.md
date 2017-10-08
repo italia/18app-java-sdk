@@ -38,23 +38,27 @@ Activate the certificate and verify that partitaIva code matches the user's one.
     }
 ```
 
-CheckAndFreeze Operation: freezes the voucher as long as necessary to carry out an availability check in stock or for
-     other specific situations
+##### CheckAndFreeze Operation: freezes the voucher as long as necessary to carry out an availability check in stock or for other specific situations
 ```
     service.checkAndFreeze();
 ```  
-Confirm Operation. To be called after CheckAndFreeze to confirm the consumption of all the voucher 
-amount or only a part of the amount
+##### Confirm Operation. To be called after CheckAndFreeze to confirm the consumption of all the voucher amount or only a part of the amount
 
 ```
-    service.confirm();
+    CheckResponse response = service.confirm();
+    if(response == MerchantService.SUCCESS_CONFIRMATION) {
+        // Success
+    } else {
+        // Failure
+    }
+    
 ```
 
-CheckAndConsume Operation: issues a check and consume operation (spending the actual voucher)
+##### CheckAndConsume Operation: issues a check and consume operation (spending the actual voucher)
 ```
     service.checkAndConsume();
 ``` 
-CheckOnly Operation: issues only the check of the voucher
+##### CheckOnly Operation: issues only the check of the voucher
 ```
     service.checkOnly();
 ``` 
