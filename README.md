@@ -69,10 +69,6 @@ Activate the certificate and verify that partitaIva code matches the user's one.
     service.checkAndConsumeOperation(codVoucher);
 ``` 
 
-### Installing
-
-Download jar
-
 ## Running the tests
 
 Run MerchantServiceTest.java with the available test cases.
