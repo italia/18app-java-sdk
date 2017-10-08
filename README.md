@@ -34,7 +34,7 @@ Activate the certificate and verify that partitaIva code matches the user's one.
     } catch (CertificateException e){
         // Problems with web service certificate
     } catch (VoucherVerificationException vve){
-        if (vve.getId() == FaultCodes.WRONG_PARAMETERS) {
+        if (vve.getId().equals(FaultCodes.WRONG_PARAMETERS)) {
             // Handle wrong parameters
         } else {
             // Handle other FaultCodes ...
@@ -58,7 +58,7 @@ Activate the certificate and verify that partitaIva code matches the user's one.
 
 ```
     ConfirmResponse response = service.confirmOperation(codVoucher, requiredAmount);
-    if(response.getEsito() == MerchantService.SUCCESS_CONFIRMATION) {
+    if(response.getEsito().equals(MerchantService.SUCCESS_CONFIRMATION)) {
         // Success
     } else {
         // Failure
