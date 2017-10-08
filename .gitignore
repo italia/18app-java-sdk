@@ -1,5 +1,2 @@
-.idea/artifacts/
-.idea/compiler.xml
-.idea/uiDesigner.xml
-.idea/workspace.xml
+.idea/*
 out/
