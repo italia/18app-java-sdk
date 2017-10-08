@@ -60,7 +60,8 @@ public class VerificaVoucher_Service
     public VerificaVoucher getVerificaVoucherSOAP() {
 
         try {
-           SSLContext sc = SSLContext.getInstance("SSLv3");
+
+            SSLContext sc = SSLContext.getInstance("SSLv3");
             KeyManagerFactory factory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             KeyStore keyStore = KeyStore.getInstance("PKCS12");
             keyStore.load(new FileInputStream(keystorePath), password.toCharArray());
