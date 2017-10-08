@@ -1,7 +1,11 @@
 package test;
 
-import it.mibact.bonus.verificavoucher.*;
+import it.mibact.bonus.verificavoucher.Confirm;
+import it.mibact.bonus.verificavoucher.ConfirmRequestObj;
+import it.mibact.bonus.verificavoucher.ConfirmResponse;
+import it.mibact.bonus.verificavoucher.VerificaVoucher_Service;
 
+import javax.xml.ws.soap.SOAPFaultException;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -17,18 +21,16 @@ public class TestConfirm {
         VerificaVoucher_Service verificaVoucher_service = new VerificaVoucher_Service("AAAAAA00H01H501P.p12", "m3D0T4aM");
         ConfirmRequestObj confirmRequestObj = new ConfirmRequestObj();
         Confirm confirm = new Confirm();
-        confirm.setCodiceVoucher("2a75f266");
+        confirm.setCodiceVoucher("GLrkulZT");
         confirm.setTipoOperazione("1");
-        confirm.setImporto(10);
+        confirm.setImporto(12);
         confirmRequestObj.setCheckReq(confirm);
         ConfirmResponse confirmResponse = null;
         try {
             confirmResponse = verificaVoucher_service.getVerificaVoucherSOAP().confirm(confirmRequestObj).getCheckResp();
-        } catch (Exception e) {
-            // TODO: 07/10/17 Navigare il DOM alla ricerca del codice di errore.
-            e.printStackTrace();
-        }
+        } catch (SOAPFaultException failure) {
 
+        }
 
         System.out.println(confirmResponse);
 
