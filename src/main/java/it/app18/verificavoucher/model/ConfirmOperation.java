@@ -1,4 +1,4 @@
-package lib.model;
+package it.app18.verificavoucher.model;
 
 /**
  * This enum lists possibile operation on Confirm operation in Verifica Voucher SOAP service.

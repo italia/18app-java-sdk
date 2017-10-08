@@ -1,4 +1,4 @@
-package lib;
+package it.app18.verificavoucher;
 
 /**
  * Exception to signal problems with the Secure Communication with the VerificaVoucher WebService

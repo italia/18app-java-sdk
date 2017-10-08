@@ -1,9 +1,9 @@
-package lib;
+package it.app18.verificavoucher;
 
 import com.sun.xml.internal.ws.client.ClientTransportException;
 import it.mibact.bonus.verificavoucher.*;
-import lib.model.CheckOperation;
-import lib.model.ConfirmOperation;
+import it.app18.verificavoucher.model.CheckOperation;
+import it.app18.verificavoucher.model.ConfirmOperation;
 
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -47,10 +47,6 @@ public class MerchantService {
         }
 
         service = new VerificaVoucher_Service(keystorePath, password);
-
-        // Always activate certificate before using VerificaVoucher service.
-        // We assume activation is an idem-potent operation.
-        activateCertificate();
     }
 
     /**
@@ -254,15 +250,19 @@ public class MerchantService {
     }
 
     /**
+     * Always activate certificate before using VerificaVoucher service.
+     * We assume activation is an idem-potent operation.
+     * activateCertificate();
      * Activate the merchant certificate using the protocol
      * (use Check Operation with following inputs -> type = 1, VoucherCode = 11aa22bb)
      * See https://www.18app.italia.it/static/Linee%20Guida%20Esercenti.pdf
+     * @return partitaIva of the merchant
      */
-    public CheckResponse activateCertificate() throws VoucherVerificationException, CertificateException {
+    public String activateCertificate() throws VoucherVerificationException, CertificateException {
 
         CheckResponse checkResponse = checkOnlyOperation(ACTIVATION_VOUCHER_CODE);
         System.out.println(checkResponse.toString());
-        return checkResponse;
+        return checkResponse.getPartitaIvaEsercente();
 
     }
 

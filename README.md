@@ -15,30 +15,50 @@ This certificate X509 will be generated and downloadable in .cer format directly
 the dedicated web application for traders, in an authenticated area.
 
 ### How to use it
-Initialize the service with your merchant certificate (currently in format PKCS12) and its password
+Initialize the service with your merchant certificate (currently in format PKCS12) and its password.
+Activate the certificate and verify that partitaIva code matches the user's one.
 ```
-MerchantService service = new MerchantService("\path\to\merchant\certificate.p12","certificate_password")
+    MerchantService service = new MerchantService("\path\to\merchant\certificate.p12","certificate_password")
+    String partitaIva = service.activateCertificate();
 ```
 
 ##### Check Operations. Pass customer voucher code
 ```
-try {
-    service.checkOnlyOperation(voucherCode);
-} catch (CertificateException e){
-    // Problems with web service certificate
-} catch (VoucherVerificationException vve){
-    if (vve.getId() == FaultCodes.WRONG_PARAMETERS) {
-        // Handle wrong parameters
-    } else {
-        // Handle other FaultCodes ...
+    try {       
+        service.checkOnlyOperation(voucherCode);
+    } catch (CertificateException e){
+        // Problems with web service certificate
+    } catch (VoucherVerificationException vve){
+        if (vve.getId() == FaultCodes.WRONG_PARAMETERS) {
+            // Handle wrong parameters
+        } else {
+            // Handle other FaultCodes ...
+        }
+        
     }
+```
 
-}
+CheckAndFreeze Operation: freezes the voucher as long as necessary to carry out an availability check in stock or for
+     other specific situations
 ```
-Confirm Operation
+    service.checkAndFreeze();
+```  
+Confirm Operation. To be called after CheckAndFreeze to confirm the consumption of all the voucher 
+amount or only a part of the amount
+
 ```
-MerchantService = new MerchantService("\path\to\merchant\certificate.p12","certificate_password")
+    service.confirm();
 ```
+
+CheckAndConsume Operation: issues a check and consume operation (spending the actual voucher)
+```
+    service.checkAndConsume();
+``` 
+CheckOnly Operation: issues only the check of the voucher
+```
+    service.checkOnly();
+``` 
+
 
 ### Installing
 
@@ -92,6 +112,7 @@ List of Contributors who participated in this project.
 * **Rossi Lorenzo**
 
 ## Versioning
+
 
 ## License
 
