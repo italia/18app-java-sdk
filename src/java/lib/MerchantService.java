@@ -16,14 +16,20 @@ public class MerchantService {
     private final static boolean DEBUG_MODE = true;
     private final static String ACTIVATION_VOUCHER_CODE = "11aa22bb";
 
-    // FIXME: 07/10/2017 public for sdk user
-    private final static String WRONG_PARAMETERS = "01";
-    private final static String VOUCHER_NOT_FOUND = "02";
-    private final static String FAILED_ACTIVATION_USER = "03";
-    private final static String WRONG_AMOUNT = "04";
-    private final static String NOT_ACTIVE_USER = "05";
-    private final static String WRONG_CATEGORY = "06";
-    private final static String UNKNOWN_FAULT ="00";
+    // Fault Codes
+    public class FaultCodes {
+
+        public final static String WRONG_PARAMETERS = "01";
+        public final static String VOUCHER_NOT_FOUND = "02";
+        public final static String FAILED_ACTIVATION_USER = "03";
+        public final static String WRONG_AMOUNT = "04";
+        public final static String NOT_ACTIVE_USER = "05";
+        public final static String WRONG_CATEGORY = "06";
+        public final static String UNKNOWN_FAULT = "00";
+
+    }
+
+    // Internal WS Client
     private VerificaVoucher_Service service;
 
     /**
@@ -89,22 +95,22 @@ public class MerchantService {
         System.out.println("failure data = " + data);
 
         switch (code){
-            case WRONG_PARAMETERS:
-                throw new VoucherVerificationException(WRONG_PARAMETERS,"Error in the input parameters, check and try again");
-            case VOUCHER_NOT_FOUND:
-                throw new VoucherVerificationException(VOUCHER_NOT_FOUND,"The requested voucher is not available on the system. It could be already\n" +
+            case FaultCodes.WRONG_PARAMETERS:
+                throw new VoucherVerificationException(FaultCodes.WRONG_PARAMETERS,"Error in the input parameters, check and try again");
+            case FaultCodes.VOUCHER_NOT_FOUND:
+                throw new VoucherVerificationException(FaultCodes.VOUCHER_NOT_FOUND,"The requested voucher is not available on the system. It could be already\n" +
                         "collected or canceled");
-            case NOT_ACTIVE_USER:
-                throw new VoucherVerificationException(NOT_ACTIVE_USER,"User inactive, voucher impossible to verify");
-            case FAILED_ACTIVATION_USER:
-                throw new VoucherVerificationException(FAILED_ACTIVATION_USER,"Impossible to activate the user. Please verify input parameters and that the user\n" +
+            case FaultCodes.NOT_ACTIVE_USER:
+                throw new VoucherVerificationException(FaultCodes.NOT_ACTIVE_USER,"User inactive, voucher impossible to verify");
+            case FaultCodes.FAILED_ACTIVATION_USER:
+                throw new VoucherVerificationException(FaultCodes.FAILED_ACTIVATION_USER,"Impossible to activate the user. Please verify input parameters and that the user\n" +
                         "has not been already activated.");
-            case WRONG_AMOUNT:
-                throw new VoucherVerificationException(WRONG_AMOUNT,"The amount claimed is greater than the amount of the selected voucher");
-            case WRONG_CATEGORY:
-                throw new VoucherVerificationException(WRONG_CATEGORY,"Category and type of this voucher are not aligned with category and type managed by the user.");
+            case FaultCodes.WRONG_AMOUNT:
+                throw new VoucherVerificationException(FaultCodes.WRONG_AMOUNT,"The amount claimed is greater than the amount of the selected voucher");
+            case FaultCodes.WRONG_CATEGORY:
+                throw new VoucherVerificationException(FaultCodes.WRONG_CATEGORY,"Category and type of this voucher are not aligned with category and type managed by the user.");
             default:
-                throw new VoucherVerificationException(UNKNOWN_FAULT,"Unknown fault");
+                throw new VoucherVerificationException(FaultCodes.UNKNOWN_FAULT,"Unknown fault");
 
 
         }
