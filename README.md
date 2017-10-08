@@ -14,9 +14,6 @@ Merchants must therefore register to the web application in order to sell their 
 This certificate X509 will be generated and downloadable in .cer format directly via
 the dedicated web application for traders, in an authenticated area.
 
-```
-Give examples
-```
 
 ### Installing
 
@@ -70,7 +67,6 @@ List of Contributors who participated in this project.
 * **Rossi Lorenzo**
 
 ## Versioning
-
 
 ## License
 
