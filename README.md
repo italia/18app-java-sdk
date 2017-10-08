@@ -71,32 +71,11 @@ Activate the certificate and verify that partitaIva code matches the user's one.
 
 ### Installing
 
-Download jar or add the dependency 
+Download jar
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-
-## Built With
-
-* [Maven](https://maven.apache.org/) - Dependency Management
+Run MerchantServiceTest.java with the available test cases.
 
 ## Contributing
 
@@ -108,6 +87,7 @@ List of Contributors who participated in this project.
 
 ## Versioning
 
+1.0
 
 ## License
 
