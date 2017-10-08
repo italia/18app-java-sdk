@@ -15,9 +15,11 @@ This certificate X509 will be generated and downloadable in .cer format directly
 the dedicated web application for traders, in an authenticated area.
 
 ### How to use it
-Initialize the service with your merchant certificate (currently in format PKCS12) and its password
+Initialize the service with your merchant certificate (currently in format PKCS12) and its password.
+Activate the certificate and verify that partitaIva code matches the user's one.
 ```
-MerchantService service = new MerchantService("\path\to\merchant\certificate.p12","certificate_password")
+    MerchantService service = new MerchantService("\path\to\merchant\certificate.p12","certificate_password")
+    String partitaIva = service.activateCertificate();
 ```
 
 ##### Check Operations. Pass customer voucher code
