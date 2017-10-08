@@ -10,7 +10,6 @@ Merchants must therefore register to the web application in order to sell their 
 
 ### Prerequisites
 
-
 This certificate X509 will be generated and downloadable in .cer format directly via
 the dedicated web application for traders, in an authenticated area.
 
@@ -53,8 +52,7 @@ Activate the certificate and verify that partitaIva code matches the user's one.
     ConfirmResponse confirmResponse = service.confirmOperation(codVoucher, requiredAmount);
    
 ```  
-##### Confirm Operation. To be called after CheckAndFreeze to confirm the consumption of all the voucher amount 
-##### or only a part of the amount
+##### Confirm Operation. To be called after CheckAndFreeze to confirm the consumption of all the voucher amount or only a part of the amount
 
 ```
     ConfirmResponse response = service.confirmOperation(codVoucher, requiredAmount);
@@ -73,21 +71,7 @@ Activate the certificate and verify that partitaIva code matches the user's one.
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+Download jar or add the dependency 
 
 ## Running the tests
 
