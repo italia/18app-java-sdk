@@ -51,14 +51,12 @@ To do this you should:
 ```
 ## Error codes
 Those are the error codes returned by the server:
-| Code | Description |
-| ---- | ----------- |
-| `01` | Error in the input parameters, check and try again. |
-| `02` | The requested voucher is not available on the system. It could be alreadycollected or canceled. |
-| `03` | Impossible to activate the user. Please verify input parameters and that the userhas not been already activated. |
-| `04` | The amount claimed is greater than the amount of the selected voucher. |
-| `05` | User inactive, voucher impossible to verify. |
-| `06` | Category and type of this voucher are not aligned with category and typemanaged by the user. |
+* `01`: Error in the input parameters, check and try again.
+* `02`: The requested voucher is not available on the system. It could be alreadycollected or canceled.
+* `03`: Impossible to activate the user. Please verify input parameters and that the userhas not been already activated.
+* `04`: The amount claimed is greater than the amount of the selected voucher.
+* `05`: User inactive, voucher impossible to verify.
+* `06`: Category and type of this voucher are not aligned with category and typemanaged by the user.
 
 
 ## Test
