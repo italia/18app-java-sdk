@@ -30,7 +30,4 @@ public class VoucherVerificationException extends Exception {
         this.message = message;
     }
 
-    public String getId() {
-        return id;
-    }
 }

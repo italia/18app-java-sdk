@@ -9,12 +9,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MerchantServiceTest {
     private MerchantService service;
+    private String keystorePath ="AAAAAA00H01H501P.p12";
+    private String password = "m3D0T4aM";
     private static String[] codVoucher  = {"11aa22bb","PqCSZjFp","Ex7jYMDg","lTTeLX5v"};
 
     @BeforeEach
     void setUp() {
         try {
-            service = new MerchantService("AAAAAA00H01H501P.p12", "m3D0T4aM");
+            service = new MerchantService(keystorePath, password);
             service.activateCertificate();
         } catch (VoucherVerificationException | CertificateException e) {
             e.printStackTrace();
