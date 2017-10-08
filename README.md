@@ -4,6 +4,12 @@ Java SDK for developing applications which accept 18app vouchers (retails and st
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Per utilizzare il servizio di verifica del voucher, l' esercente dovrà essere dotato di un
+certificato di autenticazione da passare alla libreria per effettuare l'autenticazione.
+“18app” può essere utilizzato solo dagli esercenti con credenziali di accesso ai Servizi
+Telematici dell’Agenzia delle Entrate e che hanno incaricato dei soggetti ad operare per
+proprio conto. Gli esercenti si devono, quindi, obbligatoriamente registrare alla web app
+per poter vendere i propri prodotti. Il certificato in formato dovrà essere.
 
 ### Prerequisites
 
