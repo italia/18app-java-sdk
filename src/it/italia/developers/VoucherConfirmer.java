@@ -11,27 +11,29 @@ public class VoucherConfirmer {
 
 	private VerificaVoucher verificaVoucher;
 	private ObjectFactory objectFactory;
-
+	
+	/**
+	 * Create a new {@link VoucherConfirmer}, used to verify and consume a specific
+	 * amount from a given voucher.
+	 */
 	public VoucherConfirmer() {
 		verificaVoucher = new VerificaVoucher_Service().getVerificaVoucherSOAP();
 		objectFactory = new ObjectFactory();
 	}
 
-	public ConfirmResponse confirm(String voucher, double amount) {
-		return confirm(voucher, amount, "1");
-	}
-	
-	public ConfirmResponse confirmAndConsume(String voucher, double amount) {
-		return confirm(voucher, amount, "2");
-	}
-	
-	private ConfirmResponse confirm(String voucher, double amount, String operation) {
+	/**
+	 * Check and consume an amount from a given voucher.
+	 * @param voucher The voucher code
+	 * @param amount The amount to consume
+	 * @return The {@link ConfirmResponse} representing the response. 
+	 */
+	public ConfirmResponse consume(String voucher, double amount) {
 		ConfirmRequestObj confirmRequest = objectFactory.createConfirmRequestObj();
 		Confirm confirm = objectFactory.createConfirm();
 		
 		confirm.setCodiceVoucher(voucher);
 		confirm.setImporto(amount);
-		confirm.setTipoOperazione(operation);
+		confirm.setTipoOperazione("1");
 		
 		confirmRequest.setCheckReq(confirm);
 		return verificaVoucher.confirm(confirmRequest).getCheckResp();

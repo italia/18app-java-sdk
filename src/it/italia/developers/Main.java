@@ -2,13 +2,17 @@ package it.italia.developers;
 
 public class Main {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		
-		System.out.println(new VoucherChecker().check("ydXTHo1T").getImporto());
+		// check
+		System.out.println(new VoucherService().check("cZd7OxFU").getImporto());
 		
-	    }
+		// consume
+		System.out.println(new VoucherService().consume("XXXXXXXX", 13.37).getEsito());
+		
+		// invalidate
+		System.out.println(new VoucherService().invalidate("XXXXXXXX").getAmbito());
+		
+	}
 
 }
