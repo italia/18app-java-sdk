@@ -18,8 +18,8 @@ public class TestFreezeAndConfirm {
 
             MerchantService service = new MerchantService("AAAAAA00H01H501P.p12", "m3D0T4aM");
             CheckResponse checkResponse = service.activateCertificate();
-            // Non consuma il voucher e non scala l'importo dal borsellino
-            // Adesso l'esercente è attivo
+            // Does not consume the voucher and does not scale the amount from the purse
+            // The merchant is now active
 
             if (!checkResponse.getNominativoBeneficiario().equals(nomeCliente)) {
                 System.out.println("nome del cliente non corrisponde con il noominativo del beneficiario del voucher");
