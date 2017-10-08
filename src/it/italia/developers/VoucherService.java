@@ -1,5 +1,8 @@
 package it.italia.developers;
 
+import javax.xml.ws.soap.SOAPFaultException;
+
+import it.italia.developers.exception.AppSOAPException;
 import it.mibact.bonus.verificavoucher.Check;
 import it.mibact.bonus.verificavoucher.CheckRequestObj;
 import it.mibact.bonus.verificavoucher.CheckResponse;
@@ -13,7 +16,6 @@ import it.mibact.bonus.verificavoucher.VerificaVoucher_Service;
 /**
  * Made for <a href="https://hack.developers.italia.it/">hack.developers</a> '17 hackaton
  * @author Andrea, Francesco
- *
  */
 public class VoucherService {
 
@@ -32,8 +34,9 @@ public class VoucherService {
 	 * Check a given voucher.
 	 * @param voucher The voucher code to check
 	 * @return The {@link CheckResponse} representing the response. 
+	 * @throws AppSOAPException 
 	 */
-	public CheckResponse check(String voucher) {
+	public CheckResponse check(String voucher) throws AppSOAPException {
 		return check(voucher, "1", null);
 	}
 
@@ -41,8 +44,9 @@ public class VoucherService {
 	 * Invalidate a given voucher.
 	 * @param voucher The voucher code to invalidate
 	 * @return The {@link CheckResponse} representing the response. 
+	 * @throws AppSOAPException 
 	 */
-	public CheckResponse invalidate(String voucher) {
+	public CheckResponse invalidate(String voucher) throws AppSOAPException {
 		return check(voucher, "1", null);
 	}
 	
@@ -51,22 +55,27 @@ public class VoucherService {
 	 * @param voucher The voucher code to check
 	 * @param partitaIvaEsercente The partitaIVA number of the merchant
 	 * @return The {@link CheckResponse} representing the response. 
+	 * @throws AppSOAPException 
 	 */
-	public CheckResponse check(String voucher, String partitaIvaEsercente) {
+	public CheckResponse check(String voucher, String partitaIvaEsercente) throws AppSOAPException {
 		return check(voucher, "1", partitaIvaEsercente);
 	}
 	
-	private CheckResponse check(String voucher, String operation, String partitaIva) {
-		CheckRequestObj checkRequest = objectFactory.createCheckRequestObj();
-		Check check = objectFactory.createCheck();
-		
-		check.setCodiceVoucher(voucher);
-		check.setTipoOperazione(operation);
-		if (partitaIva != null)
-			check.setPartitaIvaEsercente(partitaIva);
-		
-		checkRequest.setCheckReq(check);
-		return verificaVoucher.check(checkRequest).getCheckResp();
+	private CheckResponse check(String voucher, String operation, String partitaIva) throws AppSOAPException {
+		try {
+			CheckRequestObj checkRequest = objectFactory.createCheckRequestObj();
+			Check check = objectFactory.createCheck();
+			
+			check.setCodiceVoucher(voucher);
+			check.setTipoOperazione(operation);
+			if (partitaIva != null)
+				check.setPartitaIvaEsercente(partitaIva);
+			
+			checkRequest.setCheckReq(check);
+			return verificaVoucher.check(checkRequest).getCheckResp();
+		} catch (SOAPFaultException ex) {
+			throw new AppSOAPException(ex.getFault());
+		}
 	}
 	
 	/**
@@ -74,17 +83,22 @@ public class VoucherService {
 	 * @param voucher The voucher code to consume from
 	 * @param amount The amount to consume
 	 * @return The {@link ConfirmResponse} representing the response. 
+	 * @throws AppSOAPException 
 	 */
-	public ConfirmResponse consume(String voucher, double amount) {
-		ConfirmRequestObj confirmRequest = objectFactory.createConfirmRequestObj();
-		Confirm confirm = objectFactory.createConfirm();
-		
-		confirm.setCodiceVoucher(voucher);
-		confirm.setImporto(amount);
-		confirm.setTipoOperazione("1");
-		
-		confirmRequest.setCheckReq(confirm);
-		return verificaVoucher.confirm(confirmRequest).getCheckResp();
+	public ConfirmResponse consume(String voucher, double amount) throws AppSOAPException {
+		try {
+			ConfirmRequestObj confirmRequest = objectFactory.createConfirmRequestObj();
+			Confirm confirm = objectFactory.createConfirm();
+			
+			confirm.setCodiceVoucher(voucher);
+			confirm.setImporto(amount);
+			confirm.setTipoOperazione("1");
+			
+			confirmRequest.setCheckReq(confirm);
+			return verificaVoucher.confirm(confirmRequest).getCheckResp();
+		} catch (SOAPFaultException ex) {
+			throw new AppSOAPException(ex.getFault());
+		}
 	}
 
 }

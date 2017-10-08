@@ -1,8 +1,10 @@
 package it.italia.developers;
 
+import it.italia.developers.exception.AppSOAPException;
+
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws AppSOAPException {
 		
 		// check
 		System.out.println(new VoucherService().check("XXXXXXXX").getImporto());
