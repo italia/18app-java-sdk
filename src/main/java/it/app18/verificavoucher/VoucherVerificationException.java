@@ -20,10 +20,6 @@ public class VoucherVerificationException extends Exception {
         return message;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public VoucherVerificationException(String id, String message) {
         super(message);
         this.id = id;

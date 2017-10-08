@@ -58,7 +58,7 @@ Activate the certificate and verify that partitaIva code matches the user's one.
 
 ```
     ConfirmResponse response = service.confirmOperation(codVoucher, requiredAmount);
-    if(response.getEsito() == MerchantService.SUCCESS_CONFIRMATION) {
+    if(response.getEsito().equals(MerchantService.SUCCESS_CONFIRMATION)) {
         // Success
     } else {
         // Failure
