@@ -18,14 +18,19 @@ the dedicated web application for traders, in an authenticated area.
 Initialize the service with your merchant certificate (currently in format PKCS12) and its password.
 Activate the certificate and verify that partitaIva code matches the user's one.
 ```
-    MerchantService service = new MerchantService("\path\to\merchant\certificate.p12","certificate_password")
+    MerchantService service = new MerchantService("\path\to\merchant\certificate.p12","certificate_password");
     String partitaIva = service.activateCertificate();
+    // Check partitaIva
 ```
 
-##### Check Operations. Pass customer voucher code
+##### CheckOnly Operation. Pass customer voucher code and get name of the customer. Use it to check the customer personal details
 ```
     try {       
-        service.checkOnlyOperation(voucherCode);
+        CheckResponse response = service.checkOnlyOperation(voucherCode);
+        
+        // Check personal details
+        String customerName = response.getNominativoBeneficiario();
+        
     } catch (CertificateException e){
         // Problems with web service certificate
     } catch (VoucherVerificationException vve){
@@ -37,16 +42,23 @@ Activate the certificate and verify that partitaIva code matches the user's one.
         
     }
 ```
-
+#### Pre-Check and deferred Confirm for goods availability check
 ##### CheckAndFreeze Operation: freezes the voucher as long as necessary to carry out an availability check in stock or for other specific situations
 ```
-    service.checkAndFreeze();
+    CheckResponse response = service.checkAndFreezeOperation(voucherCode);
+    
+    // e.g. Goods availability Check
+    
+    double requiredAmount = getRequiredAmount();
+    ConfirmResponse confirmResponse = service.confirmOperation(codVoucher, requiredAmount);
+   
 ```  
-##### Confirm Operation. To be called after CheckAndFreeze to confirm the consumption of all the voucher amount or only a part of the amount
+##### Confirm Operation. To be called after CheckAndFreeze to confirm the consumption of all the voucher amount 
+##### or only a part of the amount
 
 ```
-    CheckResponse response = service.confirm();
-    if(response == MerchantService.SUCCESS_CONFIRMATION) {
+    ConfirmResponse response = service.confirmOperation(codVoucher, requiredAmount);
+    if(response.getEsito() == MerchantService.SUCCESS_CONFIRMATION) {
         // Success
     } else {
         // Failure
@@ -56,13 +68,8 @@ Activate the certificate and verify that partitaIva code matches the user's one.
 
 ##### CheckAndConsume Operation: issues a check and consume operation (spending the actual voucher)
 ```
-    service.checkAndConsume();
+    service.checkAndConsumeOperation(codVoucher);
 ``` 
-##### CheckOnly Operation: issues only the check of the voucher
-```
-    service.checkOnly();
-``` 
-
 
 ### Installing
 
