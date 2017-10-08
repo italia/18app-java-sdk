@@ -73,10 +73,12 @@ public class MerchantService {
         try {
 
             return service.getVerificaVoucherSOAP().check(checkRequestObj).getCheckResp();
+
         } catch (SOAPFaultException failure){
 
             handleFault(failure);
             return null;
+
         } catch (ClientTransportException e){
 
             throw new CertificateException("Problems with the 18App VerificaVoucher Web Service Certificate," +
@@ -85,24 +87,11 @@ public class MerchantService {
 
     }
 
-
-    /* When server response with soapenv:Fault, we need to take handle a fault and take exceptionCode and exceptionMessage.
-       <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-          <soapenv:Body>
-             <soapenv:Fault>
-                <faultcode>soapenv:Server</faultcode>
-                <faultstring>it.finanze.verificavoucher.fault.FaultVoucher</faultstring>
-                <detail>
-                   <ns2:FaultVoucher xmlns:ns2="http://bonus.mibact.it/VerificaVoucher/">
-                      <exceptionCode>01</exceptionCode>
-                      <exceptionMessage>Errore nel formato dei parametri in input, verificarli e riprovare</exceptionMessage>
-                   </ns2:FaultVoucher>
-                </detail>
-             </soapenv:Fault>
-          </soapenv:Body>
-        </soapenv:Envelope>
+    /**
+     * Method which maps generic {@link SOAPFaultException} to {@link VoucherVerificationException}.
+     * @param failure {@link SOAPFaultException}
+     * @throws VoucherVerificationException
      */
-
     private void handleFault(SOAPFaultException failure) throws VoucherVerificationException {
 
         String code = failure.getFault().getDetail().getFirstChild().getFirstChild().getFirstChild().getTextContent();
@@ -203,11 +192,6 @@ public class MerchantService {
         return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher, partitaIva);
     }
 
-    public CheckResponse checkAndConsume(String codVoucher) throws CertificateException, VoucherVerificationException {
-
-        return checkOperation(CheckOperation.CHECK_CONSUME_VOUCHER, codVoucher);
-    }
-
     /**
      * Overloading method of {@link #checkAndConsumeOperation(String, String)}
      * @param codVoucher voucher code of the coupon.
@@ -268,39 +252,4 @@ public class MerchantService {
 
     }
 
-    public static void main(String[] args) throws VoucherVerificationException {
-
-        /*System.setProperty("javax.net.ssl.trustStore", "cacerts");
-        System.setProperty("javax.net.ssl.trustStorePassword", "changeit");*/
-
-
-        MerchantService merchantService = null;
-        try {
-            merchantService = new MerchantService("AAAAAA00H01H501P.p12", "m3D0T4aM");
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        }
-
-        /*
-        try {
-            merchantService.confirmOperation(ConfirmOperation.CONFIRM, "ORTEV4F0", 600000);
-
-        } catch (VoucherVerificationException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            merchantService.checkAndFreezeOperation("NQSvkHaZ");
-        } catch (VoucherVerificationException e) {
-            e.printStackTrace();
-        }
-        */
-
-        try {
-            merchantService.checkOnlyOperation("51YX0nbE");
-        } catch (VoucherVerificationException | CertificateException e) {
-            e.printStackTrace();
-        }
-
-    }
 }
