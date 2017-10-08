@@ -1,5 +1,8 @@
 package it.app18.verificavoucher;
 
+/**
+ * Exception to handle fault of the VerificaVoucher Web Service
+ */
 public class VoucherVerificationException extends Exception {
     private String id;
     private String message;

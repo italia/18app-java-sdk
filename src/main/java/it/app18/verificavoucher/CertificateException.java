@@ -1,7 +1,7 @@
 package it.app18.verificavoucher;
 
 /**
- * Exception to signal problems with the Secure Communication with the VerificaVoucher WebService
+ * Exception to handle problems with the Secure Communication with the VerificaVoucher WebService
  */
 public class CertificateException extends Exception {
 
