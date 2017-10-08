@@ -77,6 +77,9 @@ Download jar
 
 Run MerchantServiceTest.java with the available test cases.
 
+Please note that the library is configured for the[test endpoint](https://wstest.18app.italia.it/VerificaVoucherWEB/VerificaVoucher).
+The server certificate is self-signed so we have provided a keystore (cacerts) with the certificate already 
+added as a trusted one.
 ## Contributing
 
 List of Contributors who participated in this project.
