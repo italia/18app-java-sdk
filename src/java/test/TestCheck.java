@@ -1,9 +1,5 @@
 package test;
 
-import com.sun.org.apache.xerces.internal.dom.ElementImpl;
-import com.sun.org.apache.xerces.internal.dom.TextImpl;
-import com.sun.xml.internal.messaging.saaj.soap.ver1_1.Detail1_1Impl;
-import com.sun.xml.internal.messaging.saaj.soap.ver1_1.Fault1_1Impl;
 import it.mibact.bonus.verificavoucher.Check;
 import it.mibact.bonus.verificavoucher.CheckRequestObj;
 import it.mibact.bonus.verificavoucher.CheckResponse;
