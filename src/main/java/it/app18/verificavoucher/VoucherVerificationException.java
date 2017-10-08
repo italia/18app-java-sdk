@@ -1,4 +1,4 @@
-package lib;
+package it.app18.verificavoucher;
 
 public class VoucherVerificationException extends Exception {
     private String id;

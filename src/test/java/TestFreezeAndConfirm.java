@@ -1,9 +1,9 @@
 
 import it.mibact.bonus.verificavoucher.CheckResponse;
 import it.mibact.bonus.verificavoucher.ConfirmResponse;
-import lib.CertificateException;
-import lib.MerchantService;
-import lib.VoucherVerificationException;
+import it.app18.verificavoucher.CertificateException;
+import it.app18.verificavoucher.MerchantService;
+import it.app18.verificavoucher.VoucherVerificationException;
 
 public class TestFreezeAndConfirm {
 
