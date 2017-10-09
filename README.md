@@ -12,19 +12,19 @@ You must have the SSL .p12 certificate with the related password.
 ### Initialize the SDK
 In order to use this SDK you must put this lines of code in your main, to be able to access
 cacerts.
-```
+```java
     System.setProperty("javax.net.ssl.trustStore", "cacerts");
     System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
 ```
 After that you need to add a Certificate with the proper object.
-```
+```java
    Certificate certificate = new Certificate.Builder()
                    .setKeystorePath("path")
                    .setPassword("password")
                    .build(); 
 ```
 Once you created the certificate you can initiate the service.
-```
+```java
     EighteenAppMerchantService service = new EighteenAppMerchantService(certificate);
 ```
 ### SDK calls types
@@ -33,7 +33,7 @@ In order to use this SDK you must understand 3 different type of calls.
 This operation checks if a voucher exists and retrieve it's informations.
 **You can add the partitaIva as optional parameter in the check object**
 Code to use this:
-```
+```java
     // Initiation of the check request object
     Check check = new Check();
     // In order to check ONLY the voucher you need to specify the operationtype
@@ -73,7 +73,7 @@ Code to use this:
 This operation checks if the voucher exists and removes from it all the import. 
 **You can add the partitaIva as optional parameter in the check object**
 Code to use this:
-```
+```java
     // Initiation of the check request object
     Check check = new Check();
     // In order to check and pay the voucher you need to specify the operationtype
@@ -113,7 +113,7 @@ Code to use this:
 This action is similar to check and pay, but if you have a voucher that has 10$ on it and you
 pay an item that costs 5$, on your profile the difference will be refunded.
 Code to use this:
-```
+```java
    // Initiation of the confirm request object
         Confirm confirm = new Confirm();
            confirm.setTipoOperazione(ConfirmOperationType.CONFIRM);
