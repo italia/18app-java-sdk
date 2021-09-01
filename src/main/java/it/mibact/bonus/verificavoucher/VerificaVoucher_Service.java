@@ -1,16 +1,14 @@
 
 package it.mibact.bonus.verificavoucher;
 
-import com.sun.xml.internal.ws.developer.JAXWSProperties;
-
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.xml.namespace.QName;
-import javax.xml.ws.*;
 import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyStore;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.xml.namespace.QName;
+import javax.xml.ws.*;
 
 
 /**
@@ -36,7 +34,7 @@ public class VerificaVoucher_Service
         URL url = null;
         WebServiceException e = null;
         try {
-           url = new URL("https://s3.eu-central-1.amazonaws.com/sklivvz-misc/VerificaVoucher.wsdl");
+            url = new URL("https://s3.eu-central-1.amazonaws.com/sklivvz-misc/VerificaVoucher.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
@@ -71,7 +69,7 @@ public class VerificaVoucher_Service
 
             VerificaVoucher service = super.getPort(new QName("http://bonus.mibact.it/VerificaVoucher/", "VerificaVoucherSOAP"), VerificaVoucher.class);
             ((BindingProvider) service).getRequestContext()
-                    .put(JAXWSProperties.SSL_SOCKET_FACTORY, sc.getSocketFactory());
+                    .put("com.sun.xml.ws.transport.https.client.SSLSocketFactory", sc.getSocketFactory());
 
 
             return service;

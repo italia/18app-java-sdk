@@ -1,6 +1,6 @@
 package it.app18.verificavoucher;
 
-import com.sun.xml.internal.ws.client.ClientTransportException;
+import com.sun.xml.ws.client.ClientTransportException;
 import it.mibact.bonus.verificavoucher.*;
 import it.app18.verificavoucher.model.CheckOperation;
 import it.app18.verificavoucher.model.ConfirmOperation;
