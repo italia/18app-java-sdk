@@ -1,9 +1,8 @@
 package it.app18.verificavoucher;
 
-import com.sun.xml.ws.client.ClientTransportException;
-import it.mibact.bonus.verificavoucher.*;
 import it.app18.verificavoucher.model.CheckOperation;
 import it.app18.verificavoucher.model.ConfirmOperation;
+import it.mibact.bonus.verificavoucher.*;
 
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -13,44 +12,22 @@ import javax.xml.ws.soap.SOAPFaultException;
 public class MerchantService {
 
     // Constants
-    private final static boolean DEBUG_MODE = true;
     private final static String ACTIVATION_VOUCHER_CODE = "11aa22bb";
-
-    // Fault Codes
-    public class FaultCodes {
-
-        public final static String WRONG_PARAMETERS = "01";
-        public final static String VOUCHER_NOT_FOUND = "02";
-        public final static String FAILED_ACTIVATION_USER = "03";
-        public final static String WRONG_AMOUNT = "04";
-        public final static String NOT_ACTIVE_USER = "05";
-        public final static String WRONG_CATEGORY = "06";
-        public final static String UNKNOWN_FAULT = "00";
-
-    }
 
     // Confirmation Codes
     public static final String SUCCESS_CONFIRMATION = "OK";
     public static final String FAILED_CONFIRMATION = "KO";
 
     // Internal WS Client
-    private VerificaVoucher_Service service;
+    private final VerificaVoucher_Service service;
 
     /**
      *
-     * @param keystorePath to the client certificate.
-     * @param password which belongs to the keystore.
      */
-    public MerchantService(String keystorePath, String password) throws VoucherVerificationException, CertificateException {
-
-        if (DEBUG_MODE){
-            // Accept self-signed certificate of the testing server
-            // You need to put the server self-signed certificate into the file cacerts
-            System.setProperty("javax.net.ssl.trustStore", "cacerts");
-            System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-        }
-
-        service = new VerificaVoucher_Service(keystorePath, password);
+    public MerchantService(String clientKeyPath, String clientKeyPass, String trustStorePath,
+                           String trustStorePassword) {
+        SSLSetup.init(clientKeyPath, clientKeyPass, trustStorePath, trustStorePassword);
+        service = new VerificaVoucher_Service();
     }
 
     /**
@@ -74,15 +51,11 @@ public class MerchantService {
 
             return service.getVerificaVoucherSOAP().check(checkRequestObj).getCheckResp();
 
-        } catch (SOAPFaultException failure){
-
-            handleFault(failure);
-            return null;
-
-        } catch (ClientTransportException e){
-
-            throw new CertificateException("Problems with the 18App VerificaVoucher Web Service Certificate," +
-                    " please contact the administrator");
+        } catch (SOAPFaultException failure) {
+            throw handleFault(failure);
+        } catch (Exception e) {
+            throw new CertificateException("Problems with the 18App VerificaVoucher Web Service," +
+                    " please contact the administrator. Error message: \n" + e.getMessage());
         }
 
     }
@@ -90,34 +63,37 @@ public class MerchantService {
     /**
      * Method which maps generic {@link SOAPFaultException} to {@link VoucherVerificationException}.
      * @param failure {@link SOAPFaultException}
-     * @throws VoucherVerificationException
+     * @return VoucherVerificationException
      */
-    private void handleFault(SOAPFaultException failure) throws VoucherVerificationException {
+    private VoucherVerificationException handleFault(SOAPFaultException failure) {
 
-        String code = failure.getFault().getDetail().getFirstChild().getFirstChild().getFirstChild().getTextContent();
+        String code, data;
+        if (failure.getFault().getDetail() != null) {
+            code = failure.getFault().getDetail().getFirstChild().getFirstChild().getFirstChild().getTextContent();
+            data = failure.getFault().getDetail().getFirstChild().getFirstChild().getNextSibling().getFirstChild().getTextContent();
+        } else {
+            code = FaultCodes.UNKNOWN_FAULT;
+            data = failure.getLocalizedMessage();
+        }
 
-        String data =
-                failure.getFault().getDetail().getFirstChild().getFirstChild().getNextSibling().getFirstChild().getTextContent();
 
         switch (code){
             case FaultCodes.WRONG_PARAMETERS:
-                throw new VoucherVerificationException(FaultCodes.WRONG_PARAMETERS,"Error in the input parameters, check and try again");
+                return new VoucherVerificationException(FaultCodes.WRONG_PARAMETERS,"Error in the input parameters, check and try again");
             case FaultCodes.VOUCHER_NOT_FOUND:
-                throw new VoucherVerificationException(FaultCodes.VOUCHER_NOT_FOUND,"The requested voucher is not available on the system. It could be already\n" +
+                return new VoucherVerificationException(FaultCodes.VOUCHER_NOT_FOUND,"The requested voucher is not available on the system. It could be already\n" +
                         "collected or canceled");
             case FaultCodes.NOT_ACTIVE_USER:
-                throw new VoucherVerificationException(FaultCodes.NOT_ACTIVE_USER,"User inactive, voucher impossible to verify");
+                return new VoucherVerificationException(FaultCodes.NOT_ACTIVE_USER,"User inactive, voucher impossible to verify");
             case FaultCodes.FAILED_ACTIVATION_USER:
-                throw new VoucherVerificationException(FaultCodes.FAILED_ACTIVATION_USER,"Impossible to activate the user. Please verify input parameters and that the user\n" +
+                return new VoucherVerificationException(FaultCodes.FAILED_ACTIVATION_USER,"Impossible to activate the user. Please verify input parameters and that the user\n" +
                         "has not been already activated.");
             case FaultCodes.WRONG_AMOUNT:
-                throw new VoucherVerificationException(FaultCodes.WRONG_AMOUNT,"The amount claimed is greater than the amount of the selected voucher");
+                return new VoucherVerificationException(FaultCodes.WRONG_AMOUNT,"The amount claimed is greater than the amount of the selected voucher");
             case FaultCodes.WRONG_CATEGORY:
-                throw new VoucherVerificationException(FaultCodes.WRONG_CATEGORY,"Category and type of this voucher are not aligned with category and type managed by the user.");
+                return new VoucherVerificationException(FaultCodes.WRONG_CATEGORY,"Category and type of this voucher are not aligned with category and type managed by the user.");
             default:
-                throw new VoucherVerificationException(FaultCodes.UNKNOWN_FAULT,"Unknown fault");
-
-
+                return new VoucherVerificationException(FaultCodes.UNKNOWN_FAULT, "Unknown fault: " + data);
         }
     }
 
@@ -237,7 +213,7 @@ public class MerchantService {
 
     /**
      * Always activate certificate before using VerificaVoucher service.
-     * We assume activation is an idem-potent operation.
+     * We assume activation is an idempotent operation.
      * activateCertificate();
      * Activate the merchant certificate using the protocol
      * (use Check Operation with following inputs -> type = 1, VoucherCode = 11aa22bb)
@@ -247,7 +223,6 @@ public class MerchantService {
     public String activateCertificate() throws VoucherVerificationException, CertificateException {
 
         CheckResponse checkResponse = checkOnlyOperation(ACTIVATION_VOUCHER_CODE);
-        System.out.println(checkResponse.toString());
         return checkResponse.getPartitaIvaEsercente();
 
     }

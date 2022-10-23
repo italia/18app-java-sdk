@@ -12,12 +12,11 @@ Merchants must therefore register to the web application in order to sell their 
 
 This certificate X509 will be generated and downloadable in .cer format directly via
 the dedicated web application for traders, in an authenticated area.
-
+A certificate in PKCS12 format is provided for testing purpoeses.
 ### How to use it
-Initialize the service with your merchant certificate (currently in format PKCS12) and its password.
-Activate the certificate and verify that partitaIva code matches the user's one.
+Initialize the MerchantService and after certificate activation, verify that partitaIva code matches the user's one.
 ```
-    MerchantService service = new MerchantService("\path\to\merchant\certificate.p12","certificate_password");
+    MerchantService service = new MerchantService();
     String partitaIva = service.activateCertificate();
     // Check partitaIva
 ```
@@ -71,11 +70,13 @@ Activate the certificate and verify that partitaIva code matches the user's one.
 
 ## Running the tests
 
-Run MerchantServiceTest.java with the available test cases.
+Run MerchantServiceTest.java with the available test cases running the command:
+```
+mvn test
+```
 
 Please note that the library is configured for the [test endpoint](https://wstest.18app.italia.it/VerificaVoucherWEB/VerificaVoucher).
-The server certificate is self-signed so we have provided a keystore (cacerts) with the certificate already 
-added as a trusted one.
+
 ## Contributing
 
 List of Contributors who participated in this project.
@@ -86,7 +87,7 @@ List of Contributors who participated in this project.
 
 ## Versioning
 
-1.0
+1.0.0
 
 ## License
 
