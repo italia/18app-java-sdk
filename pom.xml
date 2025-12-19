@@ -8,7 +8,7 @@
     <artifactId>18app-java-sdk</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <properties>
-        <log4j2.version>2.19.0</log4j2.version>
+        <log4j2.version>2.25.3</log4j2.version>
         <github.global.server>github</github.global.server>
     </properties>
     <dependencies>
